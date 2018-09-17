@@ -1,3 +1,4 @@
 pip==18.0
 setuptools==39.0.1
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 --global-option=build_ext --global-option="-U_DLL" --global-option="-IC:/dev/work/StormLib/src/" --global-option="-LC:/dev/work/StormLib/storm_dll/;C:/dev/work/StormLib/bin/StormLib/x64/ReleaseAS/"
+numpy==1.15.1

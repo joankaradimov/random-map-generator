@@ -1,4 +1,5 @@
 import mpq
+import numpy
 import os
 
 class ScenarioData:
@@ -34,7 +35,8 @@ class ScenarioData:
 
     def handle_MTXM(self, data):
         """Handles the map tiles"""
-        self.tiles = data
+        tiles = [int.from_bytes(data[i: i + 2], byteorder='little') for i in range(0, len(data), 2)]
+        self.tiles = numpy.array(tiles).reshape(self.width, self.height)
 
     def handle_UNIT(self, data):
         """Handles the units on the map"""
