@@ -1,1 +1,50 @@
+import mpq
+import os
 
+class ScenarioData:
+    def __init__(self, chk_file):
+        while chk_file.tell() != chk_file.size():
+            chunk_name = chk_file.read(4).decode('ascii').strip()
+            chunk_size = int.from_bytes(chk_file.read(4), byteorder='little')
+
+            try:
+                chunk_handler = getattr(self, 'handle_' + chunk_name)
+                chunk_data = chk_file.read(chunk_size)
+                chunk_handler(chunk_data)
+            except AttributeError:
+                chk_file.seek(chunk_size, os.SEEK_CUR)
+
+    def handle_OWNR(self, data):
+        """Handles player types (e.g. human/computer/rescuable)"""
+        self.computer_players = data.count(5)
+        self.human_players = data.count(6)
+
+    def handle_FORC(self, data):
+        """Handles force (alliance) information"""
+        pass # TODO
+
+    def handle_ERA(self, data):
+        """Handles the tileset"""
+        self.tileset = int.from_bytes(data, byteorder='little')
+
+    def handle_DIM(self, data):
+        """Handles the dimentions of the map"""
+        self.width = int.from_bytes(data[:2], byteorder='little')
+        self.height = int.from_bytes(data[2:], byteorder='little')
+
+    def handle_MTXM(self, data):
+        """Handles the map tiles"""
+        self.tiles = data
+
+    def handle_UNIT(self, data):
+        """Handles the units on the map"""
+        pass # TODO: extract start location and resources data
+
+    def handle_THG2(self, data):
+        """Handles the thingies on the map"""
+        pass # TODO: extract trees and other decorations
+
+map = mpq.MPQFile("Lost Temple.scm")
+chk_file = map.open('staredit\\scenario.chk')
+x = ScenarioData(chk_file)
+chk_file.close()
