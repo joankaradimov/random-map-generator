@@ -46,7 +46,20 @@ class ScenarioData:
         """Handles the thingies on the map"""
         pass # TODO: extract trees and other decorations
 
-map = mpq.MPQFile("Lost Temple.scm")
-chk_file = map.open('staredit\\scenario.chk')
-x = ScenarioData(chk_file)
-chk_file.close()
+scenario_data = []
+for dirName, subdirList, fileList in os.walk('C:/Games/StarCraft/Maps'):
+    for filename in fileList:
+        try:
+            map = mpq.MPQFile(os.path.join(dirName, filename))
+            chk_file = map.open('staredit\\scenario.chk')
+            x = ScenarioData(chk_file)
+            # print(filename, ' - ', x.tileset, ' (', x.width, ' X ', x.height, ')')
+            if x.tileset == 4 and x.width == 128 and x.height == 128:
+                scenario_data.append(x)
+        except Exception as e:
+            print(str(e) + '; Skipping scenario:', filename)
+        finally:
+            chk_file.close()
+
+print('DONE.')
+print('Total scenarios:', len(scenario_data))
