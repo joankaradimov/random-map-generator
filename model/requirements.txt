@@ -1,5 +1,5 @@
 pip==18.0
-setuptools==39.0.1
+setuptools==40.3.0
 numpy==1.15.1
 
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 \
