@@ -1,6 +1,17 @@
 import mpq
+import enum
 import numpy
 import os
+
+class Tileset(enum.Enum):
+    BADLANDS = 0
+    SPACE_PLATFORM = 1
+    INSTALLATION = 2
+    ASHWORLD = 3
+    JUNGLE = 4
+    DESERT = 5
+    ARCTIC = 6
+    TWILIGHT = 7
 
 class ScenarioData:
     def __init__(self, chk_file):
@@ -26,7 +37,7 @@ class ScenarioData:
 
     def handle_ERA(self, data):
         """Handles the tileset"""
-        self.tileset = int.from_bytes(data, byteorder='little')
+        self.tileset = Tileset(int.from_bytes(data, byteorder='little') % 8)
 
     def handle_DIM(self, data):
         """Handles the dimentions of the map"""
@@ -54,7 +65,7 @@ for dirName, subdirList, fileList in os.walk('C:/Games/StarCraft/Maps'):
             chk_file = map.open('staredit\\scenario.chk')
             x = ScenarioData(chk_file)
             # print(filename, ' - ', x.tileset, ' (', x.width, ' X ', x.height, ')')
-            if x.tileset == 4 and x.width == 128 and x.height == 128:
+            if x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128:
                 scenario_data.append(x)
         except Exception as e:
             print(str(e) + '; Skipping scenario:', filename)
