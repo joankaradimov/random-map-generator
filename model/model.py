@@ -13,18 +13,30 @@ class Tileset(enum.Enum):
     ARCTIC = 6
     TWILIGHT = 7
 
+class ScenarioError(Exception):
+    pass
+
 class ScenarioData:
     def __init__(self, chk_file):
         while chk_file.tell() != chk_file.size():
-            chunk_name = chk_file.read(4).decode('ascii').strip()
-            chunk_size = int.from_bytes(chk_file.read(4), byteorder='little')
+            try:
+                chunk_code = chk_file.read(4)
+            except mpq.storm.error as e:
+                raise ScenarioError('Error reading chunk') from e
 
             try:
+                chunk_name = chunk_code.decode('ascii').strip()
+                chunk_size = int.from_bytes(chk_file.read(4), byteorder='little')
+
                 chunk_handler = getattr(self, 'handle_' + chunk_name)
                 chunk_data = chk_file.read(chunk_size)
                 chunk_handler(chunk_data)
             except AttributeError:
                 chk_file.seek(chunk_size, os.SEEK_CUR)
+            except mpq.storm.error as e:
+                raise ScenarioError('Error reading chunk "%s"' % chunk_name) from e
+            except UnicodeDecodeError as e:
+                raise ScenarioError('Invalid chunk name') from e
 
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
