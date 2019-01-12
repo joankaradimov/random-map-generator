@@ -39,6 +39,15 @@ class ScenarioData:
             except UnicodeDecodeError as e:
                 raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
+        self.__assert_attribute('human_players')
+        self.__assert_attribute('tileset')
+        self.__assert_attribute('height')
+        self.__assert_attribute('width')
+
+    def __assert_attribute(self, attribute):
+        if not hasattr(self, attribute):
+            raise ScenarioError('Required attribute "%s" missing in file "%s"' % (attribute, self.filename))
+
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
         self.computer_players = data.count(5)
