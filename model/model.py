@@ -69,20 +69,25 @@ class ScenarioData:
         """Handles the thingies on the map"""
         pass # TODO: extract trees and other decorations
 
-scenario_data = []
-for dirName, subdirList, fileList in os.walk('C:/Games/StarCraft/Maps'):
-    for filename in fileList:
-        try:
-            map = mpq.MPQFile(os.path.join(dirName, filename))
-            chk_file = map.open('staredit\\scenario.chk')
-            x = ScenarioData(chk_file)
-            # print(filename, ' - ', x.tileset, ' (', x.width, ' X ', x.height, ')')
-            if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128:
-                scenario_data.append(x)
-        except Exception as e:
-            print(str(e) + '; Skipping scenario:', filename)
-        finally:
-            chk_file.close()
+def process_scenarios(path):
+    scenario_data = []
+
+    for dirName, subdirList, fileList in os.walk(path):
+        for filename in fileList:
+            if filename.endswith('.scm') or filename.endswith('.scx'):
+                try:
+                    map = mpq.MPQFile(os.path.join(dirName, filename))
+                    chk_file = map.open('staredit\\scenario.chk')
+                    scenario_data.append(ScenarioData(chk_file))
+                except Exception as e:
+                    print(str(e) + '; Skipping scenario:', filename)
+                finally:
+                    chk_file.close()
+
+    return scenario_data
+
+scenarios = process_scenarios('C:/Games/StarCraft/Maps')
+four_player_jungle_scenarios = [x for x in scenarios if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128]
 
 print('DONE.')
-print('Total scenarios:', len(scenario_data))
+print('Total scenarios:', len(four_player_jungle_scenarios))
