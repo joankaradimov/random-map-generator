@@ -17,12 +17,13 @@ class ScenarioError(Exception):
     pass
 
 class ScenarioData:
-    def __init__(self, chk_file):
+    def __init__(self, filename, chk_file):
+        self.filename = filename
         while chk_file.tell() != chk_file.size():
             try:
                 chunk_code = chk_file.read(4)
             except mpq.storm.error as e:
-                raise ScenarioError('Error reading chunk') from e
+                raise ScenarioError('Error reading chunk in file "%s"' % filename) from e
 
             try:
                 chunk_name = chunk_code.decode('ascii').strip()
@@ -36,7 +37,7 @@ class ScenarioData:
             except mpq.storm.error as e:
                 raise ScenarioError('Error reading chunk "%s"' % chunk_name) from e
             except UnicodeDecodeError as e:
-                raise ScenarioError('Invalid chunk name') from e
+                raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
@@ -78,9 +79,9 @@ def process_scenarios(path):
                 try:
                     map = mpq.MPQFile(os.path.join(dirName, filename))
                     chk_file = map.open('staredit\\scenario.chk')
-                    scenario_data.append(ScenarioData(chk_file))
+                    scenario_data.append(ScenarioData(filename, chk_file))
                 except Exception as e:
-                    print(str(e) + '; Skipping scenario:', filename)
+                    print(str(e))
                 finally:
                     chk_file.close()
 
