@@ -61,11 +61,11 @@ class ScenarioData:
         tiles = [int.from_bytes(data[i: i + 2], byteorder='little') for i in range(0, len(data), 2)]
         self.tiles = np.array(tiles).reshape(self.width, self.height)
 
-    def handle_UNIT(self, data):
+    def xhandle_UNIT(self, data):
         """Handles the units on the map"""
         pass # TODO: extract start location and resources data
 
-    def handle_THG2(self, data):
+    def xhandle_THG2(self, data):
         """Handles the thingies on the map"""
         pass # TODO: extract trees and other decorations
 
