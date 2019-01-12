@@ -77,7 +77,7 @@ for dirName, subdirList, fileList in os.walk('C:/Games/StarCraft/Maps'):
             chk_file = map.open('staredit\\scenario.chk')
             x = ScenarioData(chk_file)
             # print(filename, ' - ', x.tileset, ' (', x.width, ' X ', x.height, ')')
-            if x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128:
+            if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128:
                 scenario_data.append(x)
         except Exception as e:
             print(str(e) + '; Skipping scenario:', filename)
