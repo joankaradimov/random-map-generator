@@ -100,4 +100,5 @@ scenarios = process_scenarios('C:/Games/StarCraft/Maps')
 four_player_jungle_scenarios = [x for x in scenarios if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128]
 
 print('DONE.')
-print('Total scenarios:', len(four_player_jungle_scenarios))
+print('Total scenarios:', len(scenarios))
+print('Four player jungle scenarios:', len(four_player_jungle_scenarios))
