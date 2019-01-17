@@ -3,6 +3,12 @@ import enum
 import numpy as np
 import os
 
+STARCRAFT_ROOT = 'C:/Games/StarCraft'
+MAP_DIRECTORIES = [
+    '../4-player-jungle',
+    '../maps-of-the-week',
+]
+
 class Tileset(enum.Enum):
     BADLANDS = 0
     SPACE_PLATFORM = 1
@@ -99,7 +105,11 @@ def process_scenarios(path):
 
     return scenario_data
 
-scenarios = process_scenarios('C:/Games/StarCraft/Maps')
+scenarios = []
+scenarios += process_scenarios(os.path.join(STARCRAFT_ROOT, 'Maps'))
+for directory in MAP_DIRECTORIES:
+    scenarios += process_scenarios(directory)
+
 four_player_jungle_scenarios = [x for x in scenarios if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128]
 
 print('DONE.')
