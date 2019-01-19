@@ -1,61 +1,9 @@
 import mpq
-import enum
 import numpy as np
 import os
 
-STARCRAFT_ROOT = 'C:/Games/StarCraft'
-MAP_DIRECTORIES = [
-    '../4-player-jungle',
-    '../maps-of-the-week',
-]
-
-class Tileset(enum.Enum):
-    BADLANDS = 0
-    SPACE_PLATFORM = 1
-    INSTALLATION = 2
-    ASHWORLD = 3
-    JUNGLE = 4
-    DESERT = 5
-    ARCTIC = 6
-    TWILIGHT = 7
-
-    @property
-    def mpq_filename(self):
-        if self.value < 5:
-            return 'StarDat.mpq'
-        else:
-            return 'BroodDat.mpq'
-
-    @property
-    def tileset_filename(self):
-        return {
-            self.BADLANDS: 'badlands',
-            self.SPACE_PLATFORM: 'platform',
-            self.INSTALLATION: 'install',
-            self.ASHWORLD: 'ashworld',
-            self.JUNGLE: 'jungle',
-            self.DESERT: 'Desert',
-            self.ARCTIC: 'Ice',
-            self.TWILIGHT: 'Twilight',
-        }[self]
-
-    def load_data(self):
-        self.cv5_entries = self.process('cv5', 52)
-        self.vf4_entries = self.process('vf4', 32)
-        self.vx4_entries = self.process('vx4', 32)
-
-    def process(self, extension, size):
-        mpq_file = mpq.MPQFile(os.path.join(STARCRAFT_ROOT, self.mpq_filename))
-        try:
-            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + extension))
-
-            entries = []
-            while file.tell() != file.size():
-                entries.append(file.read(size))
-
-            return entries
-        finally:
-            file.close()
+import config
+from tileset import Tileset
 
 class ScenarioError(Exception):
     pass
@@ -149,8 +97,8 @@ print('Jungle VF4 entries:', len(Tileset.JUNGLE.vf4_entries))
 print('Jungle VX4 entries:', len(Tileset.JUNGLE.vx4_entries))
 
 scenarios = []
-scenarios += process_scenarios(os.path.join(STARCRAFT_ROOT, 'Maps'))
-for directory in MAP_DIRECTORIES:
+scenarios += process_scenarios(os.path.join(config.STARCRAFT_ROOT, 'Maps'))
+for directory in config.MAP_DIRECTORIES:
     scenarios += process_scenarios(directory)
 
 four_player_jungle_scenarios = [x for x in scenarios if x.human_players == 4 and x.tileset == Tileset.JUNGLE and x.width == 128 and x.height == 128]
