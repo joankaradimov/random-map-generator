@@ -40,20 +40,22 @@ class Tileset(enum.Enum):
         }[self]
 
     def load_data(self):
-        self.cv5_entries = self.process_cv5()
+        self.cv5_entries = self.process('cv5', 52)
+        self.vf4_entries = self.process('vf4', 32)
+        self.vx4_entries = self.process('vx4', 32)
 
-    def process_cv5(self):
+    def process(self, extension, size):
         mpq_file = mpq.MPQFile(os.path.join(STARCRAFT_ROOT, self.mpq_filename))
         try:
-            cv5_file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.cv5'))
+            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + extension))
 
-            cv5_entries = []
-            while cv5_file.tell() != cv5_file.size():
-                cv5_entries.append(cv5_file.read(52))
+            entries = []
+            while file.tell() != file.size():
+                entries.append(file.read(size))
 
-            return cv5_entries
+            return entries
         finally:
-            cv5_file.close()
+            file.close()
 
 class ScenarioError(Exception):
     pass
@@ -143,6 +145,8 @@ def process_scenarios(path):
 
 Tileset.JUNGLE.load_data()
 print('Jungle CV5 entries:', len(Tileset.JUNGLE.cv5_entries))
+print('Jungle VF4 entries:', len(Tileset.JUNGLE.vf4_entries))
+print('Jungle VX4 entries:', len(Tileset.JUNGLE.vx4_entries))
 
 scenarios = []
 scenarios += process_scenarios(os.path.join(STARCRAFT_ROOT, 'Maps'))
