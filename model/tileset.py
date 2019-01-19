@@ -63,4 +63,3 @@ class Tileset(enum.Enum):
             return entries
         finally:
             file.close()
-
