@@ -19,6 +19,42 @@ class Tileset(enum.Enum):
     ARCTIC = 6
     TWILIGHT = 7
 
+    @property
+    def mpq_filename(self):
+        if self.value < 5:
+            return 'StarDat.mpq'
+        else:
+            return 'BroodDat.mpq'
+
+    @property
+    def tileset_filename(self):
+        return {
+            self.BADLANDS: 'badlands',
+            self.SPACE_PLATFORM: 'platform',
+            self.INSTALLATION: 'install',
+            self.ASHWORLD: 'ashworld',
+            self.JUNGLE: 'jungle',
+            self.DESERT: 'Desert',
+            self.ARCTIC: 'Ice',
+            self.TWILIGHT: 'Twilight',
+        }[self]
+
+    def load_data(self):
+        self.cv5_entries = self.process_cv5()
+
+    def process_cv5(self):
+        mpq_file = mpq.MPQFile(os.path.join(STARCRAFT_ROOT, self.mpq_filename))
+        try:
+            cv5_file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.cv5'))
+
+            cv5_entries = []
+            while cv5_file.tell() != cv5_file.size():
+                cv5_entries.append(cv5_file.read(52))
+
+            return cv5_entries
+        finally:
+            cv5_file.close()
+
 class ScenarioError(Exception):
     pass
 
@@ -104,6 +140,9 @@ def process_scenarios(path):
                     chk_file.close()
 
     return scenario_data
+
+Tileset.JUNGLE.load_data()
+print('Jungle CV5 entries:', len(Tileset.JUNGLE.cv5_entries))
 
 scenarios = []
 scenarios += process_scenarios(os.path.join(STARCRAFT_ROOT, 'Maps'))
