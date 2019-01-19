@@ -4,6 +4,18 @@ import os
 
 import config
 
+class CV5Entry:
+    SIZE = 52
+    EXTENSION = 'cv5'
+
+class VF4Entry:
+    SIZE = 32
+    EXTENSION = 'vf4'
+
+class VX4Entry:
+    SIZE = 32
+    EXTENSION = 'vx4'
+
 class Tileset(enum.Enum):
     BADLANDS = 0
     SPACE_PLATFORM = 1
@@ -35,18 +47,18 @@ class Tileset(enum.Enum):
         }[self]
 
     def load_data(self):
-        self.cv5_entries = self.process('cv5', 52)
-        self.vf4_entries = self.process('vf4', 32)
-        self.vx4_entries = self.process('vx4', 32)
+        self.cv5_entries = self.process(CV5Entry)
+        self.vf4_entries = self.process(VF4Entry)
+        self.vx4_entries = self.process(VX4Entry)
 
-    def process(self, extension, size):
+    def process(self, entry_type):
         mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
         try:
-            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + extension))
+            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + entry_type.EXTENSION))
 
             entries = []
             while file.tell() != file.size():
-                entries.append(file.read(size))
+                entries.append(file.read(entry_type.SIZE))
 
             return entries
         finally:
