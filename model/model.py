@@ -8,7 +8,7 @@ from tileset import Tileset
 class ScenarioError(Exception):
     pass
 
-class ScenarioData:
+class Scenario:
     def __init__(self, filename, chk_file):
         self.filename = filename
         while chk_file.tell() != chk_file.size():
@@ -75,7 +75,7 @@ class ScenarioData:
         pass # TODO: extract trees and other decorations
 
 def process_scenarios(path):
-    scenario_data = []
+    scenarios = []
 
     for dirName, subdirList, fileList in os.walk(path):
         for filename in fileList:
@@ -83,13 +83,13 @@ def process_scenarios(path):
                 try:
                     map = mpq.MPQFile(os.path.join(dirName, filename))
                     chk_file = map.open('staredit\\scenario.chk')
-                    scenario_data.append(ScenarioData(filename, chk_file))
+                    scenarios.append(Scenario(filename, chk_file))
                 except Exception as e:
                     print(str(e))
                 finally:
                     chk_file.close()
 
-    return scenario_data
+    return scenarios
 
 Tileset.JUNGLE.load_data()
 print('Jungle CV5 entries:', len(Tileset.JUNGLE.cv5_entries))
