@@ -26,6 +26,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="model.py" />
+    <Compile Include="scenario.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="tileset.py">
       <SubType>Code</SubType>
     </Compile>
