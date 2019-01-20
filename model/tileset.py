@@ -46,7 +46,7 @@ class Tileset(enum.Enum):
         if self.value < 5:
             return 'StarDat.mpq'
         else:
-            return 'BroodDat.mpq'
+            return 'BrooDat.mpq'
 
     @property
     def tileset_filename(self):
