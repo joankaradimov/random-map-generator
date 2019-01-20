@@ -41,6 +41,9 @@ class Tileset(enum.Enum):
     ARCTIC = 6
     TWILIGHT = 7
 
+    def __init__(self, value):
+        self.__tiles_cache = None
+
     @property
     def mpq_filename(self):
         if self.value < 5:
@@ -63,7 +66,7 @@ class Tileset(enum.Enum):
 
     @property
     def tiles(self):
-        if not hasattr(self, '__tiles_cache'):
+        if self.__tiles_cache == None:
             mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
             cv5_entries = self.process(mpq_file, CV5Entry)
             vf4_entries = self.process(mpq_file, VF4Entry)
