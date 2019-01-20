@@ -1,5 +1,6 @@
 import mpq
 import enum
+import numpy
 import os
 import struct
 
@@ -11,7 +12,7 @@ class CV5Entry:
 
     def __init__(self, data):
         self.data = struct.unpack('HHHHHHHHHH', data[: 20])
-        self.minitiles = struct.unpack('H' * 16, data[20:])
+        self.megatiles = struct.unpack('H' * 16, data[20:])
 
 class VF4Entry:
     SIZE = 32
@@ -28,8 +29,18 @@ class VX4Entry:
         self.data = struct.unpack('H' * 16, data)
 
 class Tile:
-    def __init__(self, cv5_entry, vf4_entries, vx4_entries):
-        pass
+    def __init__(self, megatile_index, cv5_entry, vf4_entries, vx4_entries):
+        megatile = cv5_entry.megatiles[megatile_index]
+        minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i]) for i in range(16)]
+        self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
+
+class Minitile:
+    def __init__(self, vf4_entry, vx4_entry):
+        self.walkable = bool(vf4_entry & 1)
+        self.height = (vf4_entry >> 1) & 3
+        self.blocks_view = bool(vf4_entry & 8)
+        self.ramp = bool(vf4_entry & 16)
+        # TODO: handle VX4 data
 
 class Tileset(enum.Enum):
     BADLANDS = 0
@@ -72,7 +83,10 @@ class Tileset(enum.Enum):
             vf4_entries = self.process(mpq_file, VF4Entry)
             vx4_entries = self.process(mpq_file, VX4Entry)
 
-            self.__tiles_cache = [Tile(cv5, vf4_entries, vx4_entries) for cv5 in cv5_entries]
+            self.__tiles_cache = []
+            for cv5_entry in cv5_entries:
+                for i, megatile in enumerate(cv5_entry.megatiles):
+                    self.__tiles_cache.append(Tile(i, cv5_entry, vf4_entries, vx4_entries))
 
         return self.__tiles_cache
 

@@ -63,8 +63,8 @@ class Scenario:
 
     def handle_MTXM(self, data):
         """Handles the map tiles"""
-        tiles = [int.from_bytes(data[i: i + 2], byteorder='little') for i in range(0, len(data), 2)]
-        self.tiles = np.array(tiles).reshape(self.width, self.height)
+        tiles = [self.tileset.tiles[int.from_bytes(data[i: i + 2], byteorder='little')] for i in range(0, len(data), 2)]
+        self.tiles = np.array(tiles, dtype=object).reshape(self.width, self.height)
 
     def xhandle_UNIT(self, data):
         """Handles the units on the map"""
