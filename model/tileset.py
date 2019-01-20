@@ -58,12 +58,12 @@ class Tileset(enum.Enum):
         }[self]
 
     def load_data(self):
-        self.cv5_entries = self.process(CV5Entry)
-        self.vf4_entries = self.process(VF4Entry)
-        self.vx4_entries = self.process(VX4Entry)
-
-    def process(self, entry_type):
         mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
+        self.cv5_entries = self.process(mpq_file, CV5Entry)
+        self.vf4_entries = self.process(mpq_file, VF4Entry)
+        self.vx4_entries = self.process(mpq_file, VX4Entry)
+
+    def process(self, mpq_file, entry_type):
         try:
             file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + entry_type.EXTENSION))
 
