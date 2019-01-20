@@ -1,6 +1,6 @@
-pip==18.0
-setuptools==40.3.0
-numpy==1.15.1
+pip==18.1
+setuptools==40.6.3
+numpy==1.16.0
 
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 \
     --install-option=build_ext \
