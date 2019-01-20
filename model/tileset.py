@@ -27,6 +27,10 @@ class VX4Entry:
     def __init__(self, data):
         self.data = struct.unpack('H' * 16, data)
 
+class Tile:
+    def __init__(self, cv5_entry, vf4_entries, vx4_entries):
+        pass
+
 class Tileset(enum.Enum):
     BADLANDS = 0
     SPACE_PLATFORM = 1
@@ -57,11 +61,17 @@ class Tileset(enum.Enum):
             self.TWILIGHT: 'Twilight',
         }[self]
 
-    def load_data(self):
-        mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
-        self.cv5_entries = self.process(mpq_file, CV5Entry)
-        self.vf4_entries = self.process(mpq_file, VF4Entry)
-        self.vx4_entries = self.process(mpq_file, VX4Entry)
+    @property
+    def tiles(self):
+        if not hasattr(self, '__tiles_cache'):
+            mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
+            cv5_entries = self.process(mpq_file, CV5Entry)
+            vf4_entries = self.process(mpq_file, VF4Entry)
+            vx4_entries = self.process(mpq_file, VX4Entry)
+
+            self.__tiles_cache = [Tile(cv5, vf4_entries, vx4_entries) for cv5 in cv5_entries]
+
+        return self.__tiles_cache
 
     def process(self, mpq_file, entry_type):
         try:

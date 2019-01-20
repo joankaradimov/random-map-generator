@@ -6,10 +6,7 @@ import config
 from scenario import *
 from tileset import Tileset
 
-Tileset.JUNGLE.load_data()
-print('Jungle CV5 entries:', len(Tileset.JUNGLE.cv5_entries))
-print('Jungle VF4 entries:', len(Tileset.JUNGLE.vf4_entries))
-print('Jungle VX4 entries:', len(Tileset.JUNGLE.vx4_entries))
+print('Jungle tiles:', len(Tileset.JUNGLE.tiles))
 
 scenarios = []
 scenarios += process_scenarios(os.path.join(config.STARCRAFT_ROOT, 'Maps'))
