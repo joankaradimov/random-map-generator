@@ -85,7 +85,7 @@ def process_scenarios(path):
                     chk_file = map.open('staredit\\scenario.chk')
                     scenarios.append(Scenario(filename, chk_file))
                 except Exception as e:
-                    print(str(e))
+                    pass # TODO: parse protected scenarios
                 finally:
                     chk_file.close()
 
