@@ -11,7 +11,7 @@ class CV5Entry:
     EXTENSION = 'cv5'
 
     def __init__(self, data):
-        self.data = struct.unpack('HHHHHHHHHH', data[: 20])
+        self.data = struct.unpack('HBBHHHHHHHH', data[: 20])
         self.megatiles = struct.unpack('H' * 16, data[20:])
 
 class VF4Entry:
@@ -33,6 +33,7 @@ class Tile:
         megatile = cv5_entry.megatiles[megatile_index]
         minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i]) for i in range(16)]
         self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
+        self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
 class Minitile:
     def __init__(self, vf4_entry, vx4_entry):

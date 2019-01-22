@@ -22,9 +22,9 @@ def get_height_map(tile):
 
     @np.vectorize
     def minitile_walkability(minitile):
-        return minitile.walkable / 2
+        return minitile.walkable
 
-    return np.average(minitile_heights(tile.minitiles) + minitile_walkability(tile.minitiles)) + 0.0001
+    return np.average(minitile_heights(tile.minitiles) + minitile_walkability(tile.minitiles) * 0.5) + tile.buildable * 0.2 + 0.0001
 
 scenario = four_player_jungle_scenarios[13]
 height_map = np.vectorize(get_height_map)(scenario.tiles)
