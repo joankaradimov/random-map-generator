@@ -41,7 +41,8 @@ class Minitile:
         self.height = (vf4_entry >> 1) & 3
         self.blocks_view = bool(vf4_entry & 8)
         self.ramp = bool(vf4_entry & 16)
-        # TODO: handle VX4 data
+        self.graphics_id = vx4_entry >> 1
+        self.graphics_flipped = bool(vx4_entry & 1)
 
 class Tileset(enum.Enum):
     BADLANDS = 0
