@@ -29,6 +29,8 @@ class VX4Entry:
         self.data = struct.unpack('H' * 16, data)
 
 class Tile:
+    __slots__ = 'minitiles', 'buildable'
+
     def __init__(self, megatile_index, cv5_entry, vf4_entries, vx4_entries):
         megatile = cv5_entry.megatiles[megatile_index]
         minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i]) for i in range(16)]
@@ -36,6 +38,8 @@ class Tile:
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
 class Minitile:
+    __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped'
+
     def __init__(self, vf4_entry, vx4_entry):
         self.walkable = bool(vf4_entry & 1)
         self.height = (vf4_entry >> 1) & 3
