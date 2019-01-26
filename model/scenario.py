@@ -1,6 +1,7 @@
 import mpq
 import numpy as np
 import os
+import struct
 
 import config
 import tileset
@@ -45,12 +46,36 @@ class Scenario:
 
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
+        self.is_active_player = [x == 5 or x == 6 for x in data[: 8]]
         self.computer_players = data.count(5)
         self.human_players = data.count(6)
 
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
-        pass # TODO
+        data = data.ljust(20, b'\0')
+        player_forces = struct.unpack('B' * 8, data[: 8])
+        force_flags = struct.unpack('B' * 4, data[16: ])
+        is_allied_force = [bool(x & 2) for x in force_flags]
+
+        is_active_force = [False] * 4
+        for player in range(8):
+            if self.is_active_player[player]:
+                is_active_force[player_forces[player]] = True
+
+        non_allied_players = 0
+        for player, force in enumerate(player_forces):
+            if self.is_active_player[player] and not is_allied_force[force]:
+                non_allied_players += 1
+
+        allied_forces = 0
+        for force in range(4):
+            if is_active_force[force] and is_allied_force[force]:
+                allied_forces += 1
+
+        if allied_forces == 1 and non_allied_players == 0:
+            self.alliances = self.is_active_player.count(True)
+        else:
+            self.alliances = allied_forces + non_allied_players
 
     def handle_ERA(self, data):
         """Handles the tileset"""
