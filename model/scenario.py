@@ -23,6 +23,9 @@ class PlayerType(enum.Enum):
         return self == self.HUMAN or self == self.COMPUTER
 
 class Scenario:
+    MAX_PLAYER_COUNT = 8
+    MAX_FORCE_COUNT = 4
+
     def __init__(self, filename, chk_file):
         self.filename = filename
         while chk_file.tell() != chk_file.size():
@@ -66,12 +69,12 @@ class Scenario:
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
         data = data.ljust(20, b'\0')
-        player_forces = struct.unpack('B' * 8, data[: 8])
-        force_flags = struct.unpack('B' * 4, data[16: ])
-        is_active_player = [x.is_active for x in self.player_types[: 8]]
+        player_forces = struct.unpack('B' * self.MAX_PLAYER_COUNT, data[: 8])
+        force_flags = struct.unpack('B' * self.MAX_FORCE_COUNT, data[16: ])
+        is_active_player = [x.is_active for x in self.player_types[: self.MAX_PLAYER_COUNT]]
         is_allied_force = [bool(x & 2) for x in force_flags]
 
-        is_active_force = [False] * 4
+        is_active_force = [False] * self.MAX_FORCE_COUNT
         for player in range(8):
             if is_active_player[player]:
                 is_active_force[player_forces[player]] = True
@@ -82,7 +85,7 @@ class Scenario:
                 non_allied_players += 1
 
         allied_forces = 0
-        for force in range(4):
+        for force in range(self.MAX_FORCE_COUNT):
             if is_active_force[force] and is_allied_force[force]:
                 allied_forces += 1
 
