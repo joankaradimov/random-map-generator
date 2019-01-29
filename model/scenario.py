@@ -52,7 +52,9 @@ class Scenario:
                 raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
         self.__assert_attribute('player_types')
+        self.__assert_attribute('alliances')
         self.__assert_attribute('tileset')
+        self.__assert_attribute('tiles')
         self.__assert_attribute('height')
         self.__assert_attribute('width')
 
