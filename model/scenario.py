@@ -100,8 +100,7 @@ class Scenario:
 
     def handle_DIM(self, data):
         """Handles the dimentions of the map"""
-        self.width = int.from_bytes(data[:2], byteorder='little')
-        self.height = int.from_bytes(data[2:], byteorder='little')
+        self.height, self.width = struct.unpack('<HH', data)
 
     def handle_MTXM(self, data):
         """Handles the map tiles"""
