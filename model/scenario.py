@@ -1,3 +1,4 @@
+import enum
 import mpq
 import numpy as np
 import os
@@ -8,6 +9,18 @@ import tileset
 
 class ScenarioError(Exception):
     pass
+
+class PlayerType(enum.Enum):
+    INACTIVE = 0
+    RESCUE_PASSIVE = 3
+    UNUSED = 4
+    COMPUTER = 5
+    HUMAN = 6
+    NEUTRAL = 7
+
+    @property
+    def is_active(self):
+        return self == self.HUMAN or self == self.COMPUTER
 
 class Scenario:
     def __init__(self, filename, chk_file):
@@ -35,7 +48,7 @@ class Scenario:
             except UnicodeDecodeError as e:
                 raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
-        self.__assert_attribute('human_players')
+        self.__assert_attribute('player_types')
         self.__assert_attribute('tileset')
         self.__assert_attribute('height')
         self.__assert_attribute('width')
@@ -46,25 +59,26 @@ class Scenario:
 
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
-        self.is_active_player = [x == 5 or x == 6 for x in data[: 8]]
-        self.computer_players = data.count(5)
-        self.human_players = data.count(6)
+        self.player_types = list(map(PlayerType, data))
+        self.computer_players = self.player_types.count(PlayerType.COMPUTER)
+        self.human_players = self.player_types.count(PlayerType.HUMAN)
 
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
         data = data.ljust(20, b'\0')
         player_forces = struct.unpack('B' * 8, data[: 8])
         force_flags = struct.unpack('B' * 4, data[16: ])
+        is_active_player = [x.is_active for x in self.player_types[: 8]]
         is_allied_force = [bool(x & 2) for x in force_flags]
 
         is_active_force = [False] * 4
         for player in range(8):
-            if self.is_active_player[player]:
+            if is_active_player[player]:
                 is_active_force[player_forces[player]] = True
 
         non_allied_players = 0
         for player, force in enumerate(player_forces):
-            if self.is_active_player[player] and not is_allied_force[force]:
+            if is_active_player[player] and not is_allied_force[force]:
                 non_allied_players += 1
 
         allied_forces = 0
@@ -73,7 +87,7 @@ class Scenario:
                 allied_forces += 1
 
         if allied_forces == 1 and non_allied_players == 0:
-            self.alliances = self.is_active_player.count(True)
+            self.alliances = is_active_player.count(True)
         else:
             self.alliances = allied_forces + non_allied_players
 
