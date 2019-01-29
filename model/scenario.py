@@ -96,7 +96,8 @@ class Scenario:
 
     def handle_ERA(self, data):
         """Handles the tileset"""
-        self.tileset = tileset.Tileset(int.from_bytes(data, byteorder='little') % 8)
+        tileset_index = int.from_bytes(data, byteorder='little')
+        self.tileset = tileset.Tileset(tileset_index % len(tileset.Tileset))
 
     def handle_DIM(self, data):
         """Handles the dimentions of the map"""
