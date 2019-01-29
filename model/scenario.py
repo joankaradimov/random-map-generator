@@ -71,8 +71,8 @@ class Scenario:
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
         data = data.ljust(20, b'\0')
-        player_forces = struct.unpack('B' * self.MAX_PLAYER_COUNT, data[: 8])
-        force_flags = struct.unpack('B' * self.MAX_FORCE_COUNT, data[16: ])
+        player_forces = struct.unpack_from('B' * self.MAX_PLAYER_COUNT, data)
+        force_flags = struct.unpack_from('B' * self.MAX_FORCE_COUNT, data, offset=16)
         is_active_player = [x.is_active for x in self.player_types[: self.MAX_PLAYER_COUNT]]
         is_allied_force = [bool(x & 2) for x in force_flags]
 
