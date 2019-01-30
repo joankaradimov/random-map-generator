@@ -24,6 +24,11 @@ class PlayerType(enum.Enum):
         return self == self.HUMAN or self == self.COMPUTER
 
 class Scenario:
+    __slots__ = [
+        'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
+        'player_types', 'human_players', 'computer_players', 'tiles', 'width', 'height'
+    ]
+
     MAX_PLAYER_COUNT = 8
     MAX_FORCE_COUNT = 4
 
