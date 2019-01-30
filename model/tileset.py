@@ -5,6 +5,7 @@ import os
 import struct
 
 import config
+import graphics
 
 class CV5Entry:
     SIZE = 52
@@ -28,25 +29,46 @@ class VX4Entry:
     def __init__(self, data):
         self.data = struct.unpack('H' * 16, data)
 
+class VR4Entry:
+    SIZE = 64
+    EXTENSION = 'vr4'
+
+    def __init__(self, data):
+        self.data = struct.unpack('B' * self.SIZE, data)
+
+class WPEEntry:
+    SIZE = 4
+    EXTENSION = 'wpe'
+
+    def __init__(self, data):
+        self.data = numpy.array(struct.unpack_from('BBB', data), dtype=numpy.uint8)
+
 class Tile:
     __slots__ = 'minitiles', 'buildable'
 
-    def __init__(self, megatile_index, cv5_entry, vf4_entries, vx4_entries):
+    def __init__(self, megatile_index, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries):
         megatile = cv5_entry.megatiles[megatile_index]
-        minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i]) for i in range(16)]
+        minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i], vr4_entries, wpe_entries) for i in range(16)]
         self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
-class Minitile:
-    __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped'
+    @property
+    def graphics(self):
+        return graphics.tile(self.minitiles)
 
-    def __init__(self, vf4_entry, vx4_entry):
+class Minitile:
+    __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
+
+    def __init__(self, vf4_entry, vx4_entry, vr4_entries, wpe_entries):
         self.walkable = bool(vf4_entry & 1)
         self.height = ((vf4_entry >> 1) & 3) / 3
         self.blocks_view = bool(vf4_entry & 8)
         self.ramp = bool(vf4_entry & 16)
         self.graphics_id = vx4_entry >> 1
         self.graphics_flipped = bool(vx4_entry & 1)
+
+        vr4_data = vr4_entries[self.graphics_id].data
+        self.graphics = numpy.stack([wpe_entries[x].data for x in vr4_data]).reshape([8, 8, 3])
 
 class Tileset(enum.Enum):
     BADLANDS = 0
@@ -88,11 +110,13 @@ class Tileset(enum.Enum):
             cv5_entries = self.process(mpq_file, CV5Entry)
             vf4_entries = self.process(mpq_file, VF4Entry)
             vx4_entries = self.process(mpq_file, VX4Entry)
+            vr4_entries = self.process(mpq_file, VR4Entry)
+            wpe_entries = self.process(mpq_file, WPEEntry)
 
             self.__tiles_cache = []
             for cv5_entry in cv5_entries:
                 for i, megatile in enumerate(cv5_entry.megatiles):
-                    self.__tiles_cache.append(Tile(i, cv5_entry, vf4_entries, vx4_entries))
+                    self.__tiles_cache.append(Tile(i, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries))
 
         return self.__tiles_cache
 

@@ -5,6 +5,7 @@ import os
 import struct
 
 import config
+import graphics
 import tileset
 
 class ScenarioError(Exception):
@@ -142,6 +143,10 @@ class Scenario:
             self.description = self.strings[description_index - 1]
         else:
             self.description = 'Destroy all enemy buildings.'
+
+    @property
+    def graphics(self):
+        return graphics.tile(self.tiles)
 
 def process_scenarios(path):
     scenarios = []
