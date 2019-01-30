@@ -47,11 +47,13 @@ class Scenario:
                 if chunk_size < 0:
                     raise ScenarioError('Invalid chunk size for chunk "%s"' % chunk_name)
 
-                chunk_handler = getattr(self, 'handle_' + chunk_name)
-                chunk_data = chk_file.read(chunk_size)
-                chunk_handler(chunk_data)
-            except AttributeError:
-                chk_file.seek(chunk_size, os.SEEK_CUR)
+                chunk_handler_name = 'handle_' + chunk_name
+                if hasattr(self, chunk_handler_name):
+                    chunk_handler = getattr(self, chunk_handler_name)
+                    chunk_data = chk_file.read(chunk_size)
+                    chunk_handler(chunk_data)
+                else:
+                    chk_file.seek(chunk_size, os.SEEK_CUR)
             except mpq.storm.error as e:
                 raise ScenarioError('Error reading chunk "%s"' % chunk_name) from e
             except UnicodeDecodeError as e:
