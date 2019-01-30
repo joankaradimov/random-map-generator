@@ -51,12 +51,15 @@ class Scenario:
             except UnicodeDecodeError as e:
                 raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
+        self.__assert_attribute('name')
+        self.__assert_attribute('description')
         self.__assert_attribute('player_types')
         self.__assert_attribute('alliances')
         self.__assert_attribute('tileset')
         self.__assert_attribute('tiles')
         self.__assert_attribute('height')
         self.__assert_attribute('width')
+        self.__assert_attribute('strings')
 
     def __assert_attribute(self, attribute):
         if not hasattr(self, attribute):
@@ -117,6 +120,28 @@ class Scenario:
     def xhandle_THG2(self, data):
         """Handles the thingies on the map"""
         pass # TODO: extract trees and other decorations
+
+    def handle_STR(self, data):
+        string_count = int.from_bytes(data[:2], byteorder='little')
+        offsets = struct.unpack_from('<%dH' % string_count, data, offset=2)
+
+        self.strings = []
+        for i in range(string_count):
+            string_start = offsets[i]
+            string_end = data.find(b'\0', string_start)
+            self.strings.append(data[string_start: string_end].decode('ISO-8859-1'))
+
+    def handle_SPRP(self, data):
+        name_index, description_index = struct.unpack('<HH', data)
+        if 0 < name_index < len(self.strings):
+            self.name = self.strings[name_index - 1]
+        else:
+            self.name = self.filename
+
+        if 0 < name_index < len(self.strings):
+            self.description = self.strings[description_index - 1]
+        else:
+            self.description = 'Destroy all enemy buildings.'
 
 def process_scenarios(path):
     scenarios = []
