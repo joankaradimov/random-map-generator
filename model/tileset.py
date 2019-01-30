@@ -69,6 +69,8 @@ class Minitile:
 
         vr4_data = vr4_entries[self.graphics_id].data
         self.graphics = numpy.stack([wpe_entries[x].data for x in vr4_data]).reshape([8, 8, 3])
+        if self.graphics_flipped:
+            self.graphics = numpy.fliplr(self.graphics)
 
 class Tileset(enum.Enum):
     BADLANDS = 0
