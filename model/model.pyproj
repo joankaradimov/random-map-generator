@@ -25,6 +25,9 @@
     <Compile Include="config.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="graphics.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="mdlstm.py">
       <SubType>Code</SubType>
     </Compile>
