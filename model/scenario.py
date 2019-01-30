@@ -11,6 +11,14 @@ import tileset
 class ScenarioError(Exception):
     pass
 
+class ScenarioVersion(enum.Enum):
+    WARCRAFT2 = 17
+    WARCRAFT2_EXP = 19
+    STARCRAFT_BETA = 47
+    STARCRAFT_1_00 = 59
+    STARCRAFT_1_04 = 63
+    STARCRAFT_EXP = 205
+
 class PlayerType(enum.Enum):
     INACTIVE = 0
     RESCUE_PASSIVE = 3
@@ -25,7 +33,7 @@ class PlayerType(enum.Enum):
 
 class Scenario:
     __slots__ = [
-        'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
+        'version', 'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
         'player_types', 'human_players', 'computer_players', 'tiles', 'width', 'height'
     ]
 
@@ -72,6 +80,10 @@ class Scenario:
     def __assert_attribute(self, attribute):
         if not hasattr(self, attribute):
             raise ScenarioError('Required attribute "%s" missing in file "%s"' % (attribute, self.filename))
+
+    def handle_VER(self, data):
+        """Handles the version"""
+        self.version = ScenarioVersion(int.from_bytes(data, byteorder='little'))
 
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
