@@ -44,11 +44,12 @@ class WPEEntry:
         self.data = numpy.array(struct.unpack_from('BBB', data), dtype=numpy.uint8)
 
 class Tile:
-    __slots__ = 'minitiles', 'buildable'
+    __slots__ = 'index', 'minitiles', 'buildable'
 
-    def __init__(self, megatile_index, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries):
+    def __init__(self, index, megatile_index, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries):
         megatile = cv5_entry.megatiles[megatile_index]
         minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i], vr4_entries, wpe_entries) for i in range(16)]
+        self.index = index
         self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
@@ -116,9 +117,11 @@ class Tileset(enum.Enum):
             wpe_entries = self.process(mpq_file, WPEEntry)
 
             self.__tiles_cache = []
+            tile_index = 0
             for cv5_entry in cv5_entries:
                 for i, megatile in enumerate(cv5_entry.megatiles):
-                    self.__tiles_cache.append(Tile(i, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries))
+                    self.__tiles_cache.append(Tile(tile_index, i, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries))
+                    tile_index += 1
 
         return self.__tiles_cache
 
