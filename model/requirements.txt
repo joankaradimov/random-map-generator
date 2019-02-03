@@ -3,6 +3,7 @@ pip==18.1
 setuptools==40.6.3
 matplotlib==3.0.2
 numpy==1.16.0
+https://github.com/fo40225/tensorflow-windows-wheel/blob/master/1.12.0/py36/CPU/avx2/tensorflow-1.12.0-cp36-cp36m-win_amd64.whl?raw=true
 
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 \
     --install-option=build_ext \
