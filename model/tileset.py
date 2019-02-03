@@ -138,3 +138,5 @@ class Tileset(enum.Enum):
             return entries
         finally:
             file.close()
+
+__all__ = ['Tileset']

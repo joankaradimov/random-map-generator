@@ -183,3 +183,5 @@ def process_scenarios(path):
                     chk_file.close()
 
     return scenarios
+
+__all__ = ['ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario', 'process_scenarios']
