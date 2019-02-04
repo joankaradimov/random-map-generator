@@ -74,6 +74,13 @@ class Minitile:
             self.graphics = numpy.fliplr(self.graphics)
 
 class Tileset(enum.Enum):
+    """Implements an enum with all tilesets in the game
+
+    It exposes an abstraction for reading cv5/vf4/vx4/vr4/wpe files.
+    The format specs are taken from here:
+    http://www.staredit.net/wiki/index.php?title=Terrain_Format
+    """
+
     BADLANDS = 0
     SPACE_PLATFORM = 1
     INSTALLATION = 2
