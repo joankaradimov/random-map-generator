@@ -36,6 +36,9 @@ class VR4Entry:
     def __init__(self, data):
         self.data = struct.unpack('B' * self.SIZE, data)
 
+    def to_graphics(self, wpe_entries):
+        return numpy.stack([wpe_entries[x].data for x in self.data]).reshape([8, 8, 3])
+
 class WPEEntry:
     SIZE = 4
     EXTENSION = 'wpe'
@@ -46,9 +49,9 @@ class WPEEntry:
 class Tile:
     __slots__ = 'index', 'minitiles', 'buildable'
 
-    def __init__(self, index, megatile_index, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries):
+    def __init__(self, index, megatile_index, cv5_entry, vf4_entries, vx4_entries, minitile_graphics):
         megatile = cv5_entry.megatiles[megatile_index]
-        minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i], vr4_entries, wpe_entries) for i in range(16)]
+        minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i], minitile_graphics) for i in range(16)]
         self.index = index
         self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
@@ -60,7 +63,7 @@ class Tile:
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
 
-    def __init__(self, vf4_entry, vx4_entry, vr4_entries, wpe_entries):
+    def __init__(self, vf4_entry, vx4_entry, minitile_graphics):
         self.walkable = bool(vf4_entry & 1)
         self.height = ((vf4_entry >> 1) & 3) / 3
         self.blocks_view = bool(vf4_entry & 8)
@@ -68,8 +71,7 @@ class Minitile:
         self.graphics_id = vx4_entry >> 1
         self.graphics_flipped = bool(vx4_entry & 1)
 
-        vr4_data = vr4_entries[self.graphics_id].data
-        self.graphics = numpy.stack([wpe_entries[x].data for x in vr4_data]).reshape([8, 8, 3])
+        self.graphics = minitile_graphics[self.graphics_id]
         if self.graphics_flipped:
             self.graphics = numpy.fliplr(self.graphics)
 
@@ -123,11 +125,13 @@ class Tileset(enum.Enum):
             vr4_entries = self.process(mpq_file, VR4Entry)
             wpe_entries = self.process(mpq_file, WPEEntry)
 
+            minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
+
             self.__tiles_cache = []
             tile_index = 0
             for cv5_entry in cv5_entries:
                 for i, megatile in enumerate(cv5_entry.megatiles):
-                    self.__tiles_cache.append(Tile(tile_index, i, cv5_entry, vf4_entries, vx4_entries, vr4_entries, wpe_entries))
+                    self.__tiles_cache.append(Tile(tile_index, i, cv5_entry, vf4_entries, vx4_entries, minitile_graphics))
                     tile_index += 1
 
         return self.__tiles_cache
