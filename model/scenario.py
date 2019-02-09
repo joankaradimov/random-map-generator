@@ -17,6 +17,7 @@ class ScenarioVersion(enum.Enum):
     STARCRAFT_BETA = 47
     STARCRAFT_1_00 = 59
     STARCRAFT_1_04 = 63
+    STARCRAFT_EXP_BETA = 75
     STARCRAFT_EXP = 205
 
 class PlayerType(enum.Enum):
