@@ -47,14 +47,21 @@ class WPEEntry:
         self.data = numpy.array(struct.unpack_from('BBB', data), dtype=numpy.uint8)
 
 class Tile:
-    __slots__ = 'index', 'minitiles', 'buildable'
+    __slots__ = 'group_id', 'group_offset', 'minitiles', 'buildable'
 
-    def __init__(self, index, megatile_index, cv5_entry, vf4_entries, vx4_entries, minitile_graphics):
-        megatile = cv5_entry.megatiles[megatile_index]
+    def __init__(self, group_id, group_offset, cv5_entry, vf4_entries, vx4_entries, minitile_graphics):
+        self.group_id = group_id
+        self.group_offset = group_offset
+
+        megatile = cv5_entry.megatiles[group_offset]
         minitiles = [Minitile(vf4_entries[megatile].data[i], vx4_entries[megatile].data[i], minitile_graphics) for i in range(16)]
-        self.index = index
+
         self.minitiles = numpy.array(minitiles, dtype=object).reshape(4, 4)
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
+
+    @property
+    def index(self):
+        return self.group_id * 16 + self.group_offset
 
     @property
     def graphics(self):
@@ -128,11 +135,9 @@ class Tileset(enum.Enum):
             minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
 
             self.__tiles_cache = []
-            tile_index = 0
-            for cv5_entry in cv5_entries:
-                for i, megatile in enumerate(cv5_entry.megatiles):
-                    self.__tiles_cache.append(Tile(tile_index, i, cv5_entry, vf4_entries, vx4_entries, minitile_graphics))
-                    tile_index += 1
+            for group_id, cv5_entry in enumerate(cv5_entries):
+                for group_offset, megatile in enumerate(cv5_entry.megatiles):
+                    self.__tiles_cache.append(Tile(group_id, group_offset, cv5_entry, vf4_entries, vx4_entries, minitile_graphics))
 
         return self.__tiles_cache
 
