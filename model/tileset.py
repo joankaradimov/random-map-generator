@@ -67,6 +67,14 @@ class Tile:
     def graphics(self):
         return graphics.tile(self.minitiles)
 
+    @property
+    def is_doodad(self):
+        return self.group_id >= 1024
+
+    @property
+    def is_empty(self):
+        return numpy.count_nonzero(numpy.vectorize(lambda x: x.graphics_id)(self.minitiles)) == 0
+
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
 
