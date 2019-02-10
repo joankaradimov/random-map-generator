@@ -32,12 +32,7 @@ class PlayerType(enum.Enum):
     def is_active(self):
         return self == self.HUMAN or self == self.COMPUTER
 
-class Scenario:
-    __slots__ = [
-        'version', 'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
-        'player_types', 'human_players', 'computer_players', 'tiles', 'width', 'height'
-    ]
-
+class ScenarionBuilder:
     MAX_PLAYER_COUNT = 8
     MAX_FORCE_COUNT = 4
 
@@ -68,20 +63,6 @@ class Scenario:
             except UnicodeDecodeError as e:
                 raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
-        self.__assert_attribute('name')
-        self.__assert_attribute('description')
-        self.__assert_attribute('player_types')
-        self.__assert_attribute('alliances')
-        self.__assert_attribute('tileset')
-        self.__assert_attribute('tiles')
-        self.__assert_attribute('height')
-        self.__assert_attribute('width')
-        self.__assert_attribute('strings')
-
-    def __assert_attribute(self, attribute):
-        if not hasattr(self, attribute):
-            raise ScenarioError('Required attribute "%s" missing in file "%s"' % (attribute, self.filename))
-
     def handle_VER(self, data):
         """Handles the version"""
         self.version = ScenarioVersion(int.from_bytes(data, byteorder='little'))
@@ -89,8 +70,6 @@ class Scenario:
     def handle_OWNR(self, data):
         """Handles player types (e.g. human/computer/rescuable)"""
         self.player_types = list(map(PlayerType, data))
-        self.computer_players = self.player_types.count(PlayerType.COMPUTER)
-        self.human_players = self.player_types.count(PlayerType.HUMAN)
 
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
@@ -133,6 +112,8 @@ class Scenario:
         """Handles the map tiles"""
         tiles = [self.tileset.tiles[int.from_bytes(data[i: i + 2], byteorder='little')] for i in range(0, len(data), 2)]
         self.tiles = np.array(tiles, dtype=object).reshape(self.width, self.height)
+        del self.width
+        del self.height
 
     def xhandle_UNIT(self, data):
         """Handles the units on the map"""
@@ -164,6 +145,47 @@ class Scenario:
         else:
             self.description = 'Destroy all enemy buildings.'
 
+    def to_scenario(self):
+        return Scenario(**self.__dict__)
+
+class Scenario:
+    __slots__ = [
+        'version', 'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
+        'player_types', 'human_players', 'computer_players', 'tiles'
+    ]
+
+    def __init__(self, name, description, version, strings, tileset, filename, alliances, player_types, tiles):
+        self.name = name
+        self.description = description
+        self.version = version
+        self.filename = filename
+        self.strings = strings
+        self.tileset = tileset
+        self.alliances = alliances
+        self.player_types = player_types
+        self.human_players = player_types.count(PlayerType.HUMAN)
+        self.computer_players = player_types.count(PlayerType.COMPUTER)
+        self.tiles = tiles
+
+        self.__assert_attribute('name')
+        self.__assert_attribute('description')
+        self.__assert_attribute('player_types')
+        self.__assert_attribute('alliances')
+        self.__assert_attribute('tileset')
+        self.__assert_attribute('tiles')
+
+    def __assert_attribute(self, attribute):
+        if not hasattr(self, attribute):
+            raise ScenarioError('Required attribute "%s" missing in file "%s"' % (attribute, self.filename))
+
+    @property
+    def width(self):
+        return self.tiles.shape[0]
+
+    @property
+    def height(self):
+        return self.tiles.shape[1]
+
     @property
     def graphics(self):
         return graphics.tile(self.tiles)
@@ -177,7 +199,8 @@ def process_scenarios(path):
                 try:
                     map = mpq.MPQFile(os.path.join(dirName, filename))
                     chk_file = map.open('staredit\\scenario.chk')
-                    scenarios.append(Scenario(filename, chk_file))
+                    scenario = ScenarionBuilder(filename, chk_file).to_scenario()
+                    scenarios.append(scenario)
                 except Exception as e:
                     pass # TODO: parse protected scenarios
                 finally:
