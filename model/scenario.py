@@ -149,6 +149,12 @@ class ScenarionBuilder:
         return Scenario(**self.__dict__)
 
 class Scenario:
+    """Implements a StarCraft scenario.
+
+    The format specs are taken from here:
+    http://www.staredit.net/wiki/index.php?title=Scenario.chk
+    """
+
     __slots__ = [
         'version', 'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
         'player_types', 'human_players', 'computer_players', 'tiles'
