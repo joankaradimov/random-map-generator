@@ -75,6 +75,11 @@ class Tile:
     def is_empty(self):
         return numpy.count_nonzero(numpy.vectorize(lambda x: x.graphics_id)(self.minitiles)) == 0
 
+    def __repr__(self):
+        t = type(self)
+        return '<%s.%s - group %d, item %d>' % (t.__module__, t.__name__, self.group_id, self.group_offset)
+
+
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
 
