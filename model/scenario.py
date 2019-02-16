@@ -196,6 +196,74 @@ class Scenario:
     def graphics(self):
         return graphics.tile(self.tiles)
 
+    def to_chunk_data(self):
+        result = b''
+
+        result += b'TYPE'
+        result += struct.pack('<L', 4)
+        result += b'RAWB'
+
+        result += b'VER '
+        result += struct.pack('<L', 2)
+        result += struct.pack('<H', ScenarioVersion.STARCRAFT_EXP.value)
+
+        # TODO: VCOD
+
+        result += b'OWNR'
+        result += struct.pack('<L', 12)
+        for i in range(8):
+            player_type = PlayerType.HUMAN if i < self.human_players else PlayerType.INACTIVE
+            result += struct.pack('B', player_type.value)
+
+        for i in range(4):
+            result += struct.pack('B', PlayerType.INACTIVE.value)
+
+        result += b'ERA '
+        result += struct.pack('<L', 2)
+        result += struct.pack('<H', self.tileset.value)
+
+        result += b'DIM '
+        result += struct.pack('<L', 4)
+        result += struct.pack('<HH', self.width, self.height)
+
+        result += b'SIDE'
+        result += struct.pack('<L', 12)
+        # 4 for "neutral", 5 for "user selectable", 7 for "inactive"
+        for i in range(8):
+            side = 5 if i < self.human_players else 7
+            result += struct.pack('B', side)
+        result += struct.pack('BBBB', 7, 7, 7, 4)
+
+        result += b'MTMX'
+        result += struct.pack('<L', self.width * self.height * 2)
+        for y in range(self.height):
+            for x in range(self.width):
+                result += struct.pack('<H', self.tiles[y, x].index)
+
+        result += b'UNIT' # TODO: unit data
+        result += struct.pack('<L', 0)
+
+        result += b'THG2' # TODO: thingies data
+        result += struct.pack('<L', 0)
+
+        result += b'STR ' # TODO: strings
+        result += struct.pack('<L', 2)
+        result += struct.pack('<H', 0)
+
+        result += b'SPRP' # TODO: name and description
+        result += struct.pack('<L', 4)
+        result += struct.pack('<HH', 0, 0)
+
+        result += b'FORC' # TODO: make this human readable
+        result += struct.pack('<L', 20)
+        result += b'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1\1\1\1'
+
+        result += b'COLR' # TODO: make this human readable
+        result += struct.pack('<L', 8)
+        result += b'\0\1\2\3\4\5\6\7'
+
+        return result
+
 def process_scenarios(path):
     scenarios = []
 
