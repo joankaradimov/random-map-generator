@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3de31b07-0a98-4efb-a0c5-872f2836ad52</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>model.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -28,10 +28,10 @@
     <Compile Include="graphics.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="main.py" />
     <Compile Include="mdlstm.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="model.py" />
     <Compile Include="scenario.py">
       <SubType>Code</SubType>
     </Compile>
