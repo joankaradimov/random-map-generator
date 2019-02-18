@@ -79,6 +79,14 @@ class Tile:
         t = type(self)
         return '<%s.%s - group %d, item %d>' % (t.__module__, t.__name__, self.group_id, self.group_offset)
 
+    def __hash__(self):
+        result = 0
+        for _, minitile in numpy.ndenumerate(self.minitiles):
+            result = result * 37 + hash(minitile)
+        return result
+
+    def __eq__(self, other):
+        return self.buildable == other.buildable and numpy.array_equal(self.minitiles, other.minitiles)
 
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
@@ -94,6 +102,18 @@ class Minitile:
         self.graphics = minitile_graphics[self.graphics_id]
         if self.graphics_flipped:
             self.graphics = numpy.fliplr(self.graphics)
+
+    def __hash__(self):
+        return hash(self.graphics_id)
+
+    def __eq__(self, other):
+        return \
+            self.walkable == other.walkable and \
+            self.height == other.height and \
+            self.blocks_view == other.blocks_view and \
+            self.ramp == other.ramp and \
+            self.graphics_id == other.graphics_id and \
+            self.graphics_flipped == other.graphics_flipped
 
 class Tileset(enum.Enum):
     """Implements an enum with all tilesets in the game
