@@ -17,8 +17,10 @@ class ScenarioVersion(enum.Enum):
     STARCRAFT_BETA = 47
     STARCRAFT_VANILLA = 59
     STARCRAFT_1_04 = 63
+    STARCRAFT_REMASTERED = 64
     BROOD_WAR_BETA = 75
     BROOD_WAR = 205
+    BROOD_WAR_REMASTERED = 206
 
 class PlayerType(enum.Enum):
     INACTIVE = 0
