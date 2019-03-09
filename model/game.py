@@ -30,10 +30,10 @@ class Game:
         return scenarios
 
     def process_scenario(self, scenario_path):
+        filename = os.path.basename(scenario_path)
+        map = mpq.MPQFile(scenario_path)
         try:
-            map = mpq.MPQFile(scenario_path)
             chk_file = map.open('staredit\\scenario.chk')
-            filename = os.path.basename(scenario_path)
             return self.process_chk(filename, chk_file)
         except Exception as e:
             pass # TODO: parse protected scenarios
