@@ -17,14 +17,19 @@ class Game:
         for dirName, subdirList, fileList in os.walk(directory):
             for filename in fileList:
                 if filename.endswith('.scm') or filename.endswith('.scx'):
-                    try:
-                        map = mpq.MPQFile(os.path.join(dirName, filename))
-                        chk_file = map.open('staredit\\scenario.chk')
-                        scenario = ScenarioBuilder(filename, chk_file).to_scenario()
+                    scenario = self.process_scenario(os.path.join(dirName, filename))
+                    if scenario != None:
                         scenarios.append(scenario)
-                    except Exception as e:
-                        pass # TODO: parse protected scenarios
-                    finally:
-                        chk_file.close()
 
         return scenarios
+
+    def process_scenario(self, scenario_path):
+        try:
+            map = mpq.MPQFile(scenario_path)
+            chk_file = map.open('staredit\\scenario.chk')
+            filename = os.path.basename(scenario_path)
+            return ScenarioBuilder(filename, chk_file).to_scenario()
+        except Exception as e:
+            pass # TODO: parse protected scenarios
+        finally:
+            chk_file.close()
