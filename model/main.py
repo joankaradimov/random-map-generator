@@ -1,9 +1,10 @@
 import os
 
 import config
-from scenario import *
+from game import *
 
 scenarios = []
-scenarios += process_scenarios(os.path.join(config.STARCRAFT_ROOT, 'Maps'))
+game = Game(config.STARCRAFT_ROOT)
+game.process_game_scenarios()
 for directory in config.MAP_DIRECTORIES:
-    scenarios += process_scenarios(directory)
+    scenarios += game.process_scenarios(directory)

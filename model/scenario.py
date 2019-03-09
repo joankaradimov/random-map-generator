@@ -1,5 +1,4 @@
 import enum
-import mpq
 import numpy as np
 import os
 import struct
@@ -34,7 +33,7 @@ class PlayerType(enum.Enum):
     def is_active(self):
         return self == self.HUMAN or self == self.COMPUTER
 
-class ScenarionBuilder:
+class ScenarioBuilder:
     MAX_PLAYER_COUNT = 8
     MAX_FORCE_COUNT = 4
 
@@ -266,22 +265,4 @@ class Scenario:
 
         return result
 
-def process_scenarios(path):
-    scenarios = []
-
-    for dirName, subdirList, fileList in os.walk(path):
-        for filename in fileList:
-            if filename.endswith('.scm') or filename.endswith('.scx'):
-                try:
-                    map = mpq.MPQFile(os.path.join(dirName, filename))
-                    chk_file = map.open('staredit\\scenario.chk')
-                    scenario = ScenarionBuilder(filename, chk_file).to_scenario()
-                    scenarios.append(scenario)
-                except Exception as e:
-                    pass # TODO: parse protected scenarios
-                finally:
-                    chk_file.close()
-
-    return scenarios
-
-__all__ = ['ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario', 'process_scenarios']
+__all__ = ['ScenarioBuilder', 'ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario']
