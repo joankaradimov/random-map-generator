@@ -47,6 +47,10 @@ class ScenarioBuilder:
 
             try:
                 chunk_name = chunk_code.decode('ascii').strip()
+            except UnicodeDecodeError as e:
+                chunk_name = ''
+
+            try:
                 chunk_size = int.from_bytes(chk_file.read(4), byteorder='little', signed=True)
 
                 if chunk_size < 0:
@@ -61,8 +65,6 @@ class ScenarioBuilder:
                     chk_file.seek(chunk_size, os.SEEK_CUR)
             except mpq.storm.error as e:
                 raise ScenarioError('Error reading chunk "%s"' % chunk_name) from e
-            except UnicodeDecodeError as e:
-                raise ScenarioError('Invalid chunk name in file "%s"' % filename) from e
 
     def handle_VER(self, data):
         """Handles the version"""
