@@ -52,12 +52,8 @@ class ScenarioBuilder:
 
             try:
                 chunk_size = int.from_bytes(chk_file.read(4), byteorder='little', signed=True)
-
-                if chunk_size < 0:
-                    raise ScenarioError('Invalid chunk size for chunk "%s"' % chunk_name)
-
                 chunk_handler_name = 'handle_' + chunk_name
-                if hasattr(self, chunk_handler_name):
+                if chunk_size > 0 and hasattr(self, chunk_handler_name):
                     chunk_handler = getattr(self, chunk_handler_name)
                     chunk_data = chk_file.read(chunk_size)
                     chunk_handler(chunk_data)
