@@ -16,14 +16,14 @@ class Game:
 
         for dir_name, subdir_list, file_list in os.walk(directory):
             for filename in file_list:
+                file_path = os.path.join(dir_name, filename)
                 if filename.endswith('.chk'):
-                    chk_path = os.path.join(dir_name, filename)
-                    with open(chk_path, 'rb') as chk_file:
+                    with open(file_path, 'rb') as chk_file:
                         scenario = self.process_chk(filename, chk_file)
                         if scenario != None:
                             scenarios.append(scenario)
                 if filename.endswith('.scm') or filename.endswith('.scx'):
-                    scenario = self.process_scenario(os.path.join(dir_name, filename))
+                    scenario = self.process_scenario(file_path)
                     if scenario != None:
                         scenarios.append(scenario)
 
