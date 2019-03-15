@@ -137,19 +137,25 @@ class ScenarioBuilder:
             self.strings.append(data[string_start: string_end].decode('ISO-8859-1'))
 
     def handle_SPRP(self, data):
-        name_index, description_index = struct.unpack('<HH', data)
-        if 0 < name_index < len(self.strings):
-            self.name = self.strings[name_index - 1]
+        self.name_index, self.description_index = struct.unpack('<HH', data)
+
+    def process_SPRP(self):
+        if 0 < self.name_index < len(self.strings):
+            self.name = self.strings[self.name_index - 1]
         else:
             self.name = self.filename
 
-        if 0 < name_index < len(self.strings):
-            self.description = self.strings[description_index - 1]
+        if 0 < self.description_index < len(self.strings):
+            self.description = self.strings[self.description_index - 1]
         else:
             self.description = 'Destroy all enemy buildings.'
 
+        del self.name_index
+        del self.description_index
+
     def to_scenario(self):
         self.process_MTMX()
+        self.process_SPRP()
 
         return Scenario(**self.__dict__)
 
