@@ -22,7 +22,7 @@ class Game:
                         scenario = self.process_chk(filename, chk_file)
                         if scenario != None:
                             scenarios.append(scenario)
-                if filename.endswith('.scm') or filename.endswith('.scx'):
+                elif filename.endswith('.scm') or filename.endswith('.scx'):
                     scenario = self.process_scenario(file_path)
                     if scenario != None:
                         scenarios.append(scenario)
