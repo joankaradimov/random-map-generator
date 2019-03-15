@@ -109,10 +109,14 @@ class ScenarioBuilder:
 
     def handle_MTXM(self, data):
         """Handles the map tiles"""
+        self.mtmx_data = data
+
+    def process_MTMX(self):
         tiles = [self.tileset.tiles[int.from_bytes(data[i: i + 2], byteorder='little')] for i in range(0, len(data), 2)]
         self.tiles = np.array(tiles, dtype=object).reshape(self.width, self.height)
         del self.width
         del self.height
+        del self.mtmx_data
 
     def xhandle_UNIT(self, data):
         """Handles the units on the map"""
@@ -145,6 +149,8 @@ class ScenarioBuilder:
             self.description = 'Destroy all enemy buildings.'
 
     def to_scenario(self):
+        self.process_MTMX()
+
         return Scenario(**self.__dict__)
 
 class Scenario:
