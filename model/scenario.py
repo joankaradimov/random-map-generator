@@ -109,7 +109,10 @@ class ScenarioBuilder:
 
     def handle_MTXM(self, data):
         """Handles the map tiles"""
-        self.mtmx_data = data
+        if hasattr(self, 'mtmx_data'):
+            self.mtmx_data += data
+        else:
+            self.mtmx_data = data
 
     def process_MTMX(self):
         tiles = [self.tileset.tiles[int.from_bytes(data[i: i + 2], byteorder='little')] for i in range(0, len(data), 2)]
