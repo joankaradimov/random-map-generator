@@ -73,18 +73,20 @@ class ScenarioBuilder:
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
         data = data.ljust(20, b'\0')
-        player_forces = struct.unpack_from('B' * self.MAX_PLAYER_COUNT, data)
-        force_flags = struct.unpack_from('B' * self.MAX_FORCE_COUNT, data, offset=16)
+        self.player_forces = struct.unpack_from('B' * self.MAX_PLAYER_COUNT, data)
+        self.force_flags = struct.unpack_from('B' * self.MAX_FORCE_COUNT, data, offset=16)
+
+    def process_FORC(self):
         is_active_player = [x.is_active for x in self.player_types[: self.MAX_PLAYER_COUNT]]
-        is_allied_force = [bool(x & 2) for x in force_flags]
+        is_allied_force = [bool(x & 2) for x in self.force_flags]
 
         is_active_force = [False] * self.MAX_FORCE_COUNT
         for player in range(8):
             if is_active_player[player]:
-                is_active_force[player_forces[player]] = True
+                is_active_force[self.player_forces[player]] = True
 
         non_allied_players = 0
-        for player, force in enumerate(player_forces):
+        for player, force in enumerate(self.player_forces):
             if is_active_player[player] and not is_allied_force[force]:
                 non_allied_players += 1
 
@@ -97,6 +99,9 @@ class ScenarioBuilder:
             self.alliances = is_active_player.count(True)
         else:
             self.alliances = allied_forces + non_allied_players
+
+        del self.player_forces
+        del self.force_flags
 
     def handle_ERA(self, data):
         """Handles the tileset"""
@@ -157,6 +162,7 @@ class ScenarioBuilder:
         del self.description_index
 
     def to_scenario(self):
+        self.process_FORC()
         self.process_MTMX()
         self.process_SPRP()
 
