@@ -120,7 +120,8 @@ class ScenarioBuilder:
             self.mtmx_data = data
 
     def process_MTMX(self):
-        tiles = [self.tileset.tiles[int.from_bytes(data[i: i + 2], byteorder='little')] for i in range(0, len(data), 2)]
+        tiles = struct.unpack_from('<%dH' % (self.width * self.height), self.mtmx_data)
+        tiles = [self.tileset.tiles[tile] for tile in tiles]
         self.tiles = np.array(tiles, dtype=object).reshape(self.width, self.height)
         del self.width
         del self.height
