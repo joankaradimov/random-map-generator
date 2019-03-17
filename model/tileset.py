@@ -135,12 +135,15 @@ class Tileset(enum.Enum):
     def __init__(self, value):
         self.__tiles_cache = None
 
-    @property
-    def mpq_filename(self):
-        if self.value < 5:
-            return 'StarDat.mpq'
-        else:
-            return 'BrooDat.mpq'
+    def game_archive(self):
+        data = mpq.MPQFile()
+
+        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'StarDat.mpq'))
+        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'BrooDat.mpq'))
+        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'patch_rt.mpq'))
+        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'patch_ed.mpq'))
+
+        return data
 
     @property
     def tileset_filename(self):
@@ -158,7 +161,7 @@ class Tileset(enum.Enum):
     @property
     def tiles(self):
         if self.__tiles_cache == None:
-            mpq_file = mpq.MPQFile(os.path.join(config.STARCRAFT_ROOT, self.mpq_filename))
+            mpq_file = self.game_archive()
             cv5_entries = self.process(mpq_file, CV5Entry)
             vf4_entries = self.process(mpq_file, VF4Entry)
             vx4_entries = self.process(mpq_file, VX4Entry)
