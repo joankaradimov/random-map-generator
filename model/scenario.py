@@ -148,12 +148,12 @@ class ScenarioBuilder:
         self.name_index, self.description_index = struct.unpack('<HH', data)
 
     def process_SPRP(self):
-        if 0 < self.name_index < len(self.strings):
+        if hasattr(self, 'name_index') and 0 < self.name_index < len(self.strings):
             self.name = self.strings[self.name_index - 1]
         else:
             self.name = self.filename
 
-        if 0 < self.description_index < len(self.strings):
+        if hasattr(self, 'description_index') and 0 < self.description_index < len(self.strings):
             self.description = self.strings[self.description_index - 1]
         else:
             self.description = 'Destroy all enemy buildings.'
