@@ -41,4 +41,4 @@ class Game:
             chk_file.close()
 
     def process_chk(self, filename, chk_file):
-        return ScenarioBuilder(filename, chk_file).to_scenario()
+        return Scenario.builder(filename, chk_file).to_scenario()

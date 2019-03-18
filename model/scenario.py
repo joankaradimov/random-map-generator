@@ -220,6 +220,10 @@ class Scenario:
     def graphics(self):
         return graphics.tile(self.tiles)
 
+    @staticmethod
+    def builder(filename, chk_file):
+        return ScenarioBuilder(filename, chk_file)
+
     def to_chunk_data(self):
         result = b''
 
@@ -288,4 +292,4 @@ class Scenario:
 
         return result
 
-__all__ = ['ScenarioBuilder', 'ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario']
+__all__ = ['ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario']
