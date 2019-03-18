@@ -121,7 +121,7 @@ class ScenarioBuilder:
 
     def process_MTMX(self):
         tiles = struct.unpack_from('<%dH' % (self.width * self.height), self.mtmx_data)
-        tiles = [self.tileset.tiles[tile] for tile in tiles]
+        tiles = [self.get_tile(tile) for tile in tiles]
         self.tiles = np.array(tiles, dtype=object).reshape(self.width, self.height)
         del self.width
         del self.height
@@ -161,6 +161,9 @@ class ScenarioBuilder:
 
         del self.name_index
         del self.description_index
+
+    def get_tile(self, tile_index):
+        return self.tileset.tiles[tile_index if tile_index < len(self.tileset.tiles) else 0]
 
     def to_scenario(self):
         self.process_FORC()
