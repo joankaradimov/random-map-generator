@@ -136,6 +136,9 @@ class ScenarioBuilder:
         pass # TODO: extract trees and other decorations
 
     def handle_STR(self, data):
+        if len(data) < 2:
+            return
+
         string_count = int.from_bytes(data[:2], byteorder='little')
         offsets = struct.unpack_from('<%dH' % string_count, data, offset=2)
 
