@@ -12,8 +12,8 @@ class CV5Entry:
     EXTENSION = 'cv5'
 
     def __init__(self, data):
-        self.data = struct.unpack('HBBHHHHHHHH', data[: 20])
-        self.megatiles = struct.unpack('H' * 16, data[20:])
+        self.data = struct.unpack_from('HBBHHHHHHHH', data)
+        self.megatiles = struct.unpack_from('H' * 16, data, offset=20)
 
 class VF4Entry:
     SIZE = 32
