@@ -94,9 +94,10 @@ class Tile:
         return self.buildable == other.buildable and numpy.array_equal(self.minitiles, other.minitiles)
 
 class TileGroup:
-    __slots__ = 'group_id', 'buildable'
+    __slots__ = 'index', 'group_id', 'buildable'
 
     def __init__(self, group_id, cv5_entry):
+        self.index = cv5_entry.data[0]
         self.group_id = group_id
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
