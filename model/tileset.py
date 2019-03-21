@@ -74,7 +74,7 @@ class Tile:
 
     @property
     def is_doodad(self):
-        return self.group_id >= 1024
+        return self.tile_group.is_doodad
 
     @property
     def is_empty(self):
@@ -99,6 +99,10 @@ class TileGroup:
     def __init__(self, group_id, cv5_entry):
         self.group_id = group_id
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
+
+    @property
+    def is_doodad(self):
+        return self.group_id >= 1024
 
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
