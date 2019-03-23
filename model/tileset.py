@@ -132,7 +132,27 @@ class Minitile:
             self.graphics_id == other.graphics_id and \
             self.graphics_flipped == other.graphics_flipped
 
-class Tileset(enum.Enum):
+class BaseTileset(enum.Enum):
+    def __init__(self, value):
+        self._tiles_cache = None
+
+    def process(self, mpq_file, entry_type):
+        file = None
+        try:
+            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + entry_type.EXTENSION))
+
+            entries = []
+            while file.tell() != file.size():
+                data = file.read(entry_type.SIZE)
+                entry = entry_type(data)
+                entries.append(entry)
+
+            return entries
+        finally:
+            if file != None:
+                file.close()
+
+class Tileset(BaseTileset):
     """Implements an enum with all tilesets in the game
 
     It exposes an abstraction for reading cv5/vf4/vx4/vr4/wpe files.
@@ -148,9 +168,6 @@ class Tileset(enum.Enum):
     DESERT = 5
     ARCTIC = 6
     TWILIGHT = 7
-
-    def __init__(self, value):
-        self.__tiles_cache = None
 
     def game_archive(self):
         data = mpq.MPQFile()
@@ -177,7 +194,7 @@ class Tileset(enum.Enum):
 
     @property
     def tiles(self):
-        if self.__tiles_cache == None:
+        if self._tiles_cache == None:
             mpq_file = self.game_archive()
             cv5_entries = self.process(mpq_file, CV5Entry)
             vf4_entries = self.process(mpq_file, VF4Entry)
@@ -187,29 +204,15 @@ class Tileset(enum.Enum):
 
             minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
 
-            self.__tiles_cache = []
+            self._tiles_cache = []
             for group_id, cv5_entry in enumerate(cv5_entries):
                 tile_group = TileGroup(group_id, cv5_entry)
                 for group_offset, megatile in enumerate(cv5_entry.megatiles):
                     vf4_entry = vf4_entries[megatile]
                     vx4_entry = vx4_entries[megatile]
                     tile = Tile(tile_group, group_offset, vf4_entry, vx4_entry, minitile_graphics)
-                    self.__tiles_cache.append(tile)
+                    self._tiles_cache.append(tile)
 
-        return self.__tiles_cache
-
-    def process(self, mpq_file, entry_type):
-        try:
-            file = mpq_file.open(os.path.join('tileset', self.tileset_filename + '.' + entry_type.EXTENSION))
-
-            entries = []
-            while file.tell() != file.size():
-                data = file.read(entry_type.SIZE)
-                entry = entry_type(data)
-                entries.append(entry)
-
-            return entries
-        finally:
-            file.close()
+        return self._tiles_cache
 
 __all__ = ['Tileset']
