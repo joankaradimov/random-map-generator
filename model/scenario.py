@@ -42,7 +42,7 @@ class ScenarioBuilder:
         while chk_file.tell() != chk_file.size():
             try:
                 chunk_code = chk_file.read(4)
-            except mpq.storm.error as e:
+            except Exception as e:
                 raise ScenarioError('Error reading chunk in file "%s"' % filename) from e
 
             try:
@@ -59,7 +59,7 @@ class ScenarioBuilder:
                     chunk_handler(chunk_data)
                 else:
                     chk_file.seek(chunk_size, os.SEEK_CUR)
-            except mpq.storm.error as e:
+            except Exception as e:
                 raise ScenarioError('Error reading chunk "%s"' % chunk_name) from e
 
     def handle_VER(self, data):
