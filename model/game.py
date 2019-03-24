@@ -1,6 +1,7 @@
 import mpq
 import os
 
+from tileset import *
 from scenario import *
 from string_table import *
 
@@ -15,6 +16,8 @@ class Game:
         self.data.add_archive(os.path.join(game_directory, 'BrooDat.mpq'))
         self.data.add_archive(os.path.join(game_directory, 'patch_rt.mpq'))
         self.data.add_archive(os.path.join(game_directory, 'patch_ed.mpq'))
+
+        self.tileset = Tileset
 
     def close(self):
         self.data.close()
@@ -55,7 +58,7 @@ class Game:
             chk_file.close()
 
     def process_chk(self, filename, chk_file):
-        return Scenario.builder(filename, chk_file).to_scenario()
+        return Scenario.builder(self, filename, chk_file).to_scenario()
 
     def process_mpq(self):
         scenarios = []

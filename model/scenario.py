@@ -5,7 +5,6 @@ import struct
 
 import config
 import graphics
-import tileset
 
 class ScenarioError(Exception):
     pass
@@ -37,7 +36,8 @@ class ScenarioBuilder:
     MAX_PLAYER_COUNT = 8
     MAX_FORCE_COUNT = 4
 
-    def __init__(self, filename, chk_file):
+    def __init__(self, game, filename, chk_file):
+        self.game = game
         self.filename = filename
         while chk_file.tell() != chk_file.size():
             try:
@@ -106,7 +106,7 @@ class ScenarioBuilder:
     def handle_ERA(self, data):
         """Handles the tileset"""
         tileset_index = int.from_bytes(data, byteorder='little')
-        self.tileset = tileset.Tileset(tileset_index % len(tileset.Tileset))
+        self.tileset = self.game.tileset(tileset_index % len(self.game.tileset))
 
     def handle_DIM(self, data):
         """Handles the dimentions of the map"""
@@ -173,6 +173,8 @@ class ScenarioBuilder:
         self.process_MTMX()
         self.process_SPRP()
 
+        del self.game
+
         return Scenario(**self.__dict__)
 
 class Scenario:
@@ -224,8 +226,8 @@ class Scenario:
         return graphics.tile(self.tiles)
 
     @staticmethod
-    def builder(filename, chk_file):
-        return ScenarioBuilder(filename, chk_file)
+    def builder(game, filename, chk_file):
+        return ScenarioBuilder(game, filename, chk_file)
 
     def to_chunk_data(self):
         result = b''
