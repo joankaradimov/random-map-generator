@@ -36,13 +36,9 @@ class Game:
                 file_path = os.path.join(dir_name, filename)
                 if filename.endswith('.chk'):
                     with open(file_path, 'rb') as chk_file:
-                        scenario = self.process_chk(filename, chk_file)
-                        if scenario != None:
-                            scenarios.append(scenario)
+                        scenarios += self.process_chk(filename, chk_file)
                 elif filename.endswith('.scm') or filename.endswith('.scx'):
-                    scenario = self.process_scenario(file_path)
-                    if scenario != None:
-                        scenarios.append(scenario)
+                    scenarios += self.process_scenario(file_path)
 
         return scenarios
 
@@ -52,13 +48,14 @@ class Game:
         try:
             chk_file = map.open('staredit\\scenario.chk')
             return self.process_chk(filename, chk_file)
-        except Exception as e:
-            pass # TODO: parse protected scenarios
         finally:
             chk_file.close()
 
     def process_chk(self, filename, chk_file):
-        return Scenario.builder(self, filename, chk_file).to_scenario()
+        try:
+            return [Scenario.builder(self, filename, chk_file).to_scenario()]
+        except Exception as e:
+            return []
 
     def process_mpq(self):
         scenarios = []
@@ -73,11 +70,10 @@ class Game:
         for filename in chk_files:
             chk_file = None
             try:
-                chk_file = self.data.open(filename + '\\staredit\\scenario.chk')
-                scenario = self.process_chk(os.path.basename(filename), chk_file)
-                scenarios.append(scenario)
-            except Exception as e:
-                pass
+                file_path = filename + '\\staredit\\scenario.chk'
+                if file_path in self.data:
+                    chk_file = self.data.open(file_path)
+                    scenarios += self.process_chk(os.path.basename(filename), chk_file)
             finally:
                 if chk_file != None:
                     chk_file.close()
