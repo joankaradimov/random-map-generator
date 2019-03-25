@@ -44,6 +44,12 @@
     <Compile Include="tileset.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="warcraft2\game.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="warcraft2\tileset.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
@@ -58,6 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="warcraft2\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
