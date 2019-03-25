@@ -39,9 +39,11 @@ class ScenarioBuilder:
     def __init__(self, game, filename, chk_file):
         self.game = game
         self.filename = filename
-        while chk_file.tell() != chk_file.size():
+        while True:
             try:
                 chunk_code = chk_file.read(4)
+                if len(chunk_code) < 4:
+                    break
             except Exception as e:
                 raise ScenarioError('Error reading chunk in file "%s"' % filename) from e
 
