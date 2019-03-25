@@ -20,17 +20,18 @@ class ScenarioVersion(enum.Enum):
     BROOD_WAR = 205
     BROOD_WAR_REMASTERED = 206
 
-class PlayerType(enum.Enum):
+class BasePlayerType(enum.Enum):
+    @property
+    def is_active(self):
+        return self == self.HUMAN or self == self.COMPUTER
+
+class PlayerType(BasePlayerType):
     INACTIVE = 0
     RESCUE_PASSIVE = 3
     UNUSED = 4
     COMPUTER = 5
     HUMAN = 6
     NEUTRAL = 7
-
-    @property
-    def is_active(self):
-        return self == self.HUMAN or self == self.COMPUTER
 
 class ScenarioBuilder:
     MAX_PLAYER_COUNT = 8
@@ -299,4 +300,4 @@ class Scenario:
 
         return result
 
-__all__ = ['ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario']
+__all__ = ['ScenarioError', 'ScenarioVersion', 'BasePlayerType', 'PlayerType', 'Scenario']
