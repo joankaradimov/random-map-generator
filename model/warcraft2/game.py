@@ -1,6 +1,7 @@
 import os
 import mpq
 
+import warcraft2.scenario
 import warcraft2.tileset
 import game
 
@@ -15,3 +16,6 @@ class Game(game.Game):
 
     def process_mpq(self):
         return [] # TODO: implement
+
+    def scenario_buider(self, filename, chk_file):
+        return warcraft2.scenario.Scenario.builder(self, filename, chk_file)

@@ -47,6 +47,9 @@
     <Compile Include="warcraft2\game.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="warcraft2\scenario.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="warcraft2\tileset.py">
       <SubType>Code</SubType>
     </Compile>

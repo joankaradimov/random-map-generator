@@ -34,7 +34,7 @@ class Game:
         for dir_name, subdir_list, file_list in os.walk(directory):
             for filename in file_list:
                 file_path = os.path.join(dir_name, filename)
-                if filename.endswith('.chk'):
+                if filename.endswith('.chk') or filename.endswith('.pud'):
                     with open(file_path, 'rb') as chk_file:
                         scenarios += self.process_chk(filename, chk_file)
                 elif filename.endswith('.scm') or filename.endswith('.scx'):
@@ -53,7 +53,7 @@ class Game:
 
     def process_chk(self, filename, chk_file):
         try:
-            return [Scenario.builder(self, filename, chk_file).to_scenario()]
+            return [self.scenario_buider(filename, chk_file).to_scenario()]
         except Exception as e:
             return []
 
@@ -79,3 +79,6 @@ class Game:
                     chk_file.close()
 
         return scenarios
+
+    def scenario_buider(self, filename, chk_file):
+        return Scenario.builder(self, filename, chk_file)
