@@ -3,7 +3,7 @@
 
 # Python projects
 */env
-*/__pycache__
+__pycache__
 
 # Jupyter files
 .ipynb_checkpoints
