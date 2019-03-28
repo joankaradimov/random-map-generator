@@ -38,6 +38,9 @@
     <Compile Include="scenario.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="starcraft\game.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="string_table.py">
       <SubType>Code</SubType>
     </Compile>
@@ -69,6 +72,7 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="starcraft\" />
     <Folder Include="warcraft2\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
