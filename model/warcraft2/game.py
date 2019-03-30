@@ -23,4 +23,4 @@ class Game(game.Game):
         return [] # TODO: implement
 
     def scenario_buider(self, filename, chk_file):
-        return warcraft2.scenario.Scenario.builder(self, filename, chk_file)
+        return warcraft2.scenario.ScenarioBuilder(self, filename, chk_file)

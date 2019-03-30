@@ -101,11 +101,6 @@ class Scenario(scenario.Scenario):
         self.human_players = self.player_types.count(PlayerType.HUMAN)
         self.computer_players = self.player_types.count(PlayerType.COMPUTER)
 
-    @staticmethod
-    def builder(game, filename, chk_file):
-        return ScenarioBuilder(game, filename, chk_file)
-
-
     def to_chunk_data(self):
         result = b''
 

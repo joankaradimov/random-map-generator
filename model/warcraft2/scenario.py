@@ -31,7 +31,3 @@ class Scenario(scenario.Scenario):
         super().__init__(*args, **kwargs)
         self.human_players = self.player_types.count(PlayerType.HUMAN)
         self.computer_players = self.player_types.count(PlayerType.COMPUTER)
-
-    @staticmethod
-    def builder(game, filename, chk_file):
-        return ScenarioBuilder(game, filename, chk_file)
