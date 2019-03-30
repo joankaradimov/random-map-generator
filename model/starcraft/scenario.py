@@ -87,8 +87,6 @@ class ScenarioBuilder(scenario.ScenarioBuilder):
         self.process_MTMX()
         self.process_SPRP()
 
-        del self.game
-
         return Scenario(**self.__dict__)
 
 class Scenario(scenario.Scenario):

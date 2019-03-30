@@ -24,8 +24,6 @@ class ScenarioBuilder(scenario.ScenarioBuilder):
         self.alliances = 1
         self.strings = []
 
-        del self.game
-
         return Scenario(**self.__dict__)
 
 class Scenario(scenario.Scenario):

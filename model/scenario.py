@@ -94,10 +94,11 @@ class ScenarioBuilder:
 class Scenario:
     __slots__ = [
         'version', 'name', 'description', 'strings', 'filename', 'tileset', 'alliances',
-        'player_types', 'human_players', 'computer_players', 'tiles'
+        'player_types', 'human_players', 'computer_players', 'tiles', 'game',
     ]
 
-    def __init__(self, name, description, version, strings, tileset, filename, alliances, player_types, tiles):
+    def __init__(self, game, name, description, version, strings, tileset, filename, alliances, player_types, tiles):
+        self.game = game
         self.name = name
         self.description = description
         self.version = version
