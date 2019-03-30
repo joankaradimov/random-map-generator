@@ -1,6 +1,6 @@
 import scenario
 
-class PlayerType(scenario.BasePlayerType):
+class PlayerType(scenario.PlayerType):
     _PASSIVE_COMPUTER = 0
     _COMPUTER = 1
     PASSIVE_COMPUTER = 2

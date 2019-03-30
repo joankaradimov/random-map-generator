@@ -41,6 +41,9 @@
     <Compile Include="starcraft\game.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="starcraft\scenario.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="string_table.py">
       <SubType>Code</SubType>
     </Compile>

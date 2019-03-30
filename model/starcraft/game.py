@@ -2,7 +2,7 @@ import mpq
 import os
 
 from tileset import *
-from scenario import *
+import starcraft.scenario
 from string_table import *
 import game
 
@@ -57,4 +57,4 @@ class Game(game.Game):
         return scenarios
 
     def scenario_buider(self, filename, chk_file):
-        return Scenario.builder(self, filename, chk_file)
+        return starcraft.scenario.ScenarioBuilder(self, filename, chk_file)
