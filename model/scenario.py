@@ -19,11 +19,6 @@ class ScenarioVersion(enum.Enum):
     BROOD_WAR = 205
     BROOD_WAR_REMASTERED = 206
 
-class PlayerType(enum.Enum):
-    @property
-    def is_active(self):
-        return self == self.HUMAN or self == self.COMPUTER
-
 class ScenarioBuilder:
     MAX_PLAYER_COUNT = 8
     MAX_FORCE_COUNT = 4
@@ -59,6 +54,10 @@ class ScenarioBuilder:
     def handle_VER(self, data):
         """Handles the version"""
         self.version = ScenarioVersion(int.from_bytes(data, byteorder='little'))
+
+    def handle_OWNR(self, data):
+        """Handles player types (e.g. human/computer/rescuable)"""
+        self.player_types = list(map(self.game.player_type, data))
 
     def handle_ERA(self, data):
         """Handles the tileset"""
@@ -107,6 +106,8 @@ class Scenario:
         self.tileset = tileset
         self.alliances = alliances
         self.player_types = player_types
+        self.human_players = self.player_types.count(game.player_type.HUMAN)
+        self.computer_players = self.player_types.count(game.player_type.COMPUTER)
         self.tiles = tiles
 
         self.__assert_attribute('name')
@@ -136,4 +137,4 @@ class Scenario:
     def builder(game, filename, chk_file):
         return ScenarioBuilder(game, filename, chk_file)
 
-__all__ = ['ScenarioError', 'ScenarioVersion', 'PlayerType', 'Scenario']
+__all__ = ['ScenarioError', 'ScenarioVersion', 'Scenario']

@@ -2,19 +2,7 @@ import struct
 
 import scenario
 
-class PlayerType(scenario.PlayerType):
-    INACTIVE = 0
-    RESCUE_PASSIVE = 3
-    UNUSED = 4
-    COMPUTER = 5
-    HUMAN = 6
-    NEUTRAL = 7
-
 class ScenarioBuilder(scenario.ScenarioBuilder):
-    def handle_OWNR(self, data):
-        """Handles player types (e.g. human/computer/rescuable)"""
-        self.player_types = list(map(PlayerType, data))
-
     def handle_FORC(self, data):
         """Handles force (alliance) information"""
         data = data.ljust(20, b'\0')
@@ -95,11 +83,6 @@ class Scenario(scenario.Scenario):
     The format specs are taken from here:
     http://www.staredit.net/wiki/index.php?title=Scenario.chk
     """
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.human_players = self.player_types.count(PlayerType.HUMAN)
-        self.computer_players = self.player_types.count(PlayerType.COMPUTER)
 
     def to_chunk_data(self):
         result = b''

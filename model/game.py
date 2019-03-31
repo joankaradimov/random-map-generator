@@ -1,9 +1,15 @@
+import enum
 import mpq
 import os
 
 from tileset import *
 from scenario import *
 from string_table import *
+
+class PlayerType(enum.Enum):
+    @property
+    def is_active(self):
+        return self == self.HUMAN or self == self.COMPUTER
 
 class Game:
     def __init__(self, game_directory):
