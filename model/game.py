@@ -16,8 +16,14 @@ class Game:
         self.directory = game_directory
         self.data = mpq.MPQFile()
 
+        for data_file in self.data_files():
+            self.load_data_file(data_file)
+
     def close(self):
         self.data.close()
+
+    def load_data_file(self, data_file):
+        self.data.add_archive(os.path.join(self.directory, data_file))
 
     def process_game_scenarios(self):
         scenarios = []

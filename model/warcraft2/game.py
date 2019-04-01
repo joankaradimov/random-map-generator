@@ -19,10 +19,12 @@ class Game(game.Game):
     def __init__(self, game_directory):
         super().__init__(game_directory)
 
-        self.data.add_archive(os.path.join(game_directory, 'War2Dat.mpq'))
-
         self.tileset = warcraft2.tileset.Tileset
         self.player_type = PlayerType
+
+    @classmethod
+    def data_files(cls):
+        return ['War2Dat.mpq']
 
     def process_file(self, filename, file_path):
         if filename.endswith('.pud'):

@@ -18,15 +18,19 @@ class Game(game.Game):
     def __init__(self, game_directory):
         super().__init__(game_directory)
 
-        self.data.add_archive(os.path.join(game_directory, 'Starcraft.mpq'))
-        self.data.add_archive(os.path.join(game_directory, 'Broodwar.mpq'))
-        self.data.add_archive(os.path.join(game_directory, 'StarDat.mpq'))
-        self.data.add_archive(os.path.join(game_directory, 'BrooDat.mpq'))
-        self.data.add_archive(os.path.join(game_directory, 'patch_rt.mpq'))
-        self.data.add_archive(os.path.join(game_directory, 'patch_ed.mpq'))
-
         self.tileset = Tileset
         self.player_type = PlayerType
+
+    @classmethod
+    def data_files(cls):
+        return [
+            'Starcraft.mpq',
+            'Broodwar.mpq',
+            'StarDat.mpq',
+            'BrooDat.mpq',
+            'patch_rt.mpq',
+            'patch_ed.mpq',
+        ]
 
     def process_file(self, filename, file_path):
         if filename.endswith('.chk'):
