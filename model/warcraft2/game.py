@@ -33,7 +33,7 @@ class Game(game.Game):
         else:
             return []
 
-    def process_mpq(self):
+    def scenario_filenames(self):
         return [] # TODO: implement
 
     def scenario_buider(self, filename, chk_file):

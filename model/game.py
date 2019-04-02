@@ -31,6 +31,21 @@ class Game:
         scenarios += self.process_scenarios(os.path.join(self.directory, 'Maps'))
         return scenarios
 
+    def process_mpq(self):
+        scenarios = []
+
+        for filename in self.scenario_filenames():
+            chk_file = None
+            try:
+                if filename in self.data:
+                    chk_file = self.data.open(filename)
+                    scenarios += self.process_chk(os.path.basename(filename), chk_file)
+            finally:
+                if chk_file != None:
+                    chk_file.close()
+
+        return scenarios
+
     def process_scenarios(self, directory):
         scenarios = []
 

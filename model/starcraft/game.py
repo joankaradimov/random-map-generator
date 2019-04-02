@@ -46,28 +46,14 @@ class Game(game.Game):
         else:
             return []
 
-    def process_mpq(self):
-        scenarios = []
+    def scenario_filenames(self):
         map_data = self.data.open('arr\mapdata.tbl')
         try:
-            chk_files = StringTable(map_data)
+            return [x + '\\staredit\\scenario.chk' for x in StringTable(map_data)]
         except mpq.storm.error as e:
-            return scenarios
+            return []
         finally:
             map_data.close()
-
-        for filename in chk_files:
-            chk_file = None
-            try:
-                file_path = filename + '\\staredit\\scenario.chk'
-                if file_path in self.data:
-                    chk_file = self.data.open(file_path)
-                    scenarios += self.process_chk(os.path.basename(filename), chk_file)
-            finally:
-                if chk_file != None:
-                    chk_file.close()
-
-        return scenarios
 
     def scenario_buider(self, filename, chk_file):
         return starcraft.scenario.ScenarioBuilder(self, filename, chk_file)
