@@ -94,12 +94,20 @@ class Tile:
         return self.buildable == other.buildable and numpy.array_equal(self.minitiles, other.minitiles)
 
 class TileGroup:
-    __slots__ = 'index', 'group_id', 'buildable'
+    __slots__ = 'index', 'group_id', 'buildable', '__dict__'
 
     def __init__(self, group_id, cv5_entry):
         self.index = cv5_entry.data[0]
         self.group_id = group_id
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
+
+        if self.is_doodad:
+            self.overlay_id = cv5_entry.data[3]
+        else:
+            self.left_edge = cv5_entry.data[3]
+            self.top_edge = cv5_entry.data[4]
+            self.right_edge = cv5_entry.data[5]
+            self.bottom_edge = cv5_entry.data[6]
 
     @property
     def is_doodad(self):
