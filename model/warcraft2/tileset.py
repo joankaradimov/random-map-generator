@@ -10,7 +10,7 @@ class CV4Entry:
     EXTENSION = 'cv4'
 
     def __init__(self, data):
-        self.data = struct.unpack_from('HHHHH', data, offset=32)
+        self.data = struct.unpack_from('10B', data, offset=32)
         self.megatiles = struct.unpack_from('H' * 16, data)
 
 class PPLEntry:
