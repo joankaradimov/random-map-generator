@@ -111,7 +111,7 @@ class TileGroup:
 
     @property
     def is_doodad(self):
-        return self.group_id >= 1024
+        return self.index == 1
 
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
