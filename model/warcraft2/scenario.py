@@ -14,4 +14,9 @@ class ScenarioBuilder(scenario.ScenarioBuilder):
         return Scenario(**self.__dict__)
 
 class Scenario(scenario.Scenario):
+    """Implements a Warcraft 2 scenario.
+
+    The format specs are taken from here:
+    http://cade.datamax.bg/war2x/pudspec.html
+    """
     pass
