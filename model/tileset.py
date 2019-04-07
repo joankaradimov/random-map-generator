@@ -94,10 +94,10 @@ class Tile:
         return self.buildable == other.buildable and numpy.array_equal(self.minitiles, other.minitiles)
 
 class TileGroup:
-    __slots__ = 'index', 'group_id', 'buildable', '__dict__'
+    __slots__ = 'megagroup', 'group_id', 'buildable', '__dict__'
 
     def __init__(self, group_id, cv5_entry):
-        self.index = cv5_entry.data[0]
+        self.megagroup = cv5_entry.data[0]
         self.group_id = group_id
         self.buildable = not bool((cv5_entry.data[1] >> 4) & 8)
 
@@ -111,7 +111,7 @@ class TileGroup:
 
     @property
     def is_doodad(self):
-        return self.index == 1
+        return self.megagroup == 1
 
 class Minitile:
     __slots__ = 'walkable', 'height', 'blocks_view', 'ramp', 'graphics_id', 'graphics_flipped', 'graphics'
