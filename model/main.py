@@ -12,8 +12,9 @@ def create_game(game_directory):
         if all(os.path.exists(x) for x in data_file_paths):
             return game(game_directory)
 
-scenarios = []
-game = Game(config.STARCRAFT_ROOT)
-scenarios += game.process_game_scenarios()
-for directory in config.MAP_DIRECTORIES:
-    scenarios += game.process_scenarios(directory)
+if __name__ == '__main__':
+    scenarios = []
+    game = create_game(config.STARCRAFT_ROOT)
+    scenarios += game.process_game_scenarios()
+    for directory in config.MAP_DIRECTORIES:
+        scenarios += game.process_scenarios(directory)
