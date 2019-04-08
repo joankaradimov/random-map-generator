@@ -81,8 +81,12 @@ class Tile:
         return numpy.count_nonzero(numpy.vectorize(lambda x: x.graphics_id)(self.minitiles)) == 0
 
     def __repr__(self):
-        t = type(self)
-        return '<%s.%s - group %d, item %d>' % (t.__module__, t.__name__, self.group_id, self.group_offset)
+        return '<%s.%s - megagroup: %d, group %d, item %d>' % (
+            type(self).__module__,
+            type(self).__name__,
+            self.tile_group.megagroup,
+            self.group_id,
+            self.group_offset)
 
     def __hash__(self):
         result = 0
