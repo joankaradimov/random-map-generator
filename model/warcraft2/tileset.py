@@ -1,6 +1,5 @@
 import mpq
 import numpy
-import os
 import struct
 
 import tileset
@@ -42,12 +41,12 @@ class Tileset(tileset.BaseTileset):
 
     def tileset_filename(self, entry_type):
         base_filename = {
-            self.FOREST: 'Forest',
-            self.WINTER: 'Iceland',
-            self.WASTELAND: 'Swamp',
-            self.SWAMP: 'XSwamp',
+            self.FOREST: 'Art\\bgs\\Forest\\forest',
+            self.WINTER: 'Art\\bgs\\Iceland\\iceland',
+            self.WASTELAND: 'Art\\bgs\\Swamp\\swamp',
+            self.SWAMP: 'Art\\bgs\\XSwamp\\xswamp',
         }[self]
-        return os.path.join('Art', 'bgs', base_filename, base_filename.lower() + '.' + entry_type.EXTENSION)
+        return base_filename + '.' + entry_type.EXTENSION
 
     @property
     def tiles(self):

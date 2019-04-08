@@ -189,16 +189,16 @@ class Tileset(BaseTileset):
 
     def tileset_filename(self, entry_type):
         base_filename = {
-            self.BADLANDS: 'badlands',
-            self.SPACE_PLATFORM: 'platform',
-            self.INSTALLATION: 'install',
-            self.ASHWORLD: 'ashworld',
-            self.JUNGLE: 'jungle',
-            self.DESERT: 'Desert',
-            self.ARCTIC: 'Ice',
-            self.TWILIGHT: 'Twilight',
+            self.BADLANDS: 'tileset\\badlands',
+            self.SPACE_PLATFORM: 'tileset\\platform',
+            self.INSTALLATION: 'tileset\\install',
+            self.ASHWORLD: 'tileset\\ashworld',
+            self.JUNGLE: 'tileset\\jungle',
+            self.DESERT: 'tileset\\Desert',
+            self.ARCTIC: 'tileset\\Ice',
+            self.TWILIGHT: 'tileset\\Twilight',
         }[self]
-        return os.path.join('tileset', base_filename + '.' + entry_type.EXTENSION)
+        return base_filename + '.' + entry_type.EXTENSION
 
     @property
     def tiles(self):
