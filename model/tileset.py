@@ -151,7 +151,7 @@ class BaseTileset(enum.Enum):
     def process(self, mpq_file, entry_type):
         file = None
         try:
-            file = mpq_file.open(self.tileset_filename(entry_type))
+            file = mpq_file.open(self.tileset_basename() + '.' + entry_type.EXTENSION)
 
             entries = []
             while file.tell() != file.size():
@@ -191,8 +191,8 @@ class Tileset(BaseTileset):
 
         return data
 
-    def tileset_filename(self, entry_type):
-        base_filename = {
+    def tileset_basename(self):
+        return {
             self.BADLANDS: 'tileset\\badlands',
             self.SPACE_PLATFORM: 'tileset\\platform',
             self.INSTALLATION: 'tileset\\install',
@@ -202,7 +202,6 @@ class Tileset(BaseTileset):
             self.ARCTIC: 'tileset\\Ice',
             self.TWILIGHT: 'tileset\\Twilight',
         }[self]
-        return base_filename + '.' + entry_type.EXTENSION
 
     @property
     def tiles(self):

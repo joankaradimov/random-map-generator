@@ -39,14 +39,13 @@ class Tileset(tileset.BaseTileset):
 
         return data
 
-    def tileset_filename(self, entry_type):
-        base_filename = {
+    def tileset_basename(self):
+        return {
             self.FOREST: 'Art\\bgs\\Forest\\forest',
             self.WINTER: 'Art\\bgs\\Iceland\\iceland',
             self.WASTELAND: 'Art\\bgs\\Swamp\\swamp',
             self.SWAMP: 'Art\\bgs\\XSwamp\\xswamp',
         }[self]
-        return base_filename + '.' + entry_type.EXTENSION
 
     @property
     def tiles(self):
