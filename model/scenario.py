@@ -88,7 +88,8 @@ class ScenarioBuilder:
         pass # TODO: extract start location and resources data
 
     def get_tile(self, tile_index):
-        return self.tileset.tiles[tile_index if tile_index < len(self.tileset.tiles) else 0]
+        tiles = self.game.tiles(self.tileset)
+        return tiles[tile_index if tile_index < len(tiles) else 0]
 
 class Scenario:
     __slots__ = [

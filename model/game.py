@@ -16,6 +16,8 @@ class Game:
         self.directory = game_directory
         self.data = mpq.MPQFile()
 
+        self._tiles_cache = {}
+
         for data_file in self.data_files():
             self.load_data_file(data_file)
 
@@ -61,3 +63,19 @@ class Game:
             return [self.scenario_buider(filename, chk_file).to_scenario()]
         except Exception as e:
             return []
+
+    def process_tileset_file(self, tileset, entry_type):
+        file = None
+        try:
+            file = self.data.open(self.tileset_basename(tileset) + '.' + entry_type.EXTENSION)
+
+            entries = []
+            while file.tell() != file.size():
+                data = file.read(entry_type.SIZE)
+                entry = entry_type(data)
+                entries.append(entry)
+
+            return entries
+        finally:
+            if file != None:
+                file.close()

@@ -57,3 +57,36 @@ class Game(game.Game):
 
     def scenario_buider(self, filename, chk_file):
         return starcraft.scenario.ScenarioBuilder(self, filename, chk_file)
+
+    def tileset_basename(self, tileset):
+        return {
+            self.tileset.BADLANDS: 'tileset\\badlands',
+            self.tileset.SPACE_PLATFORM: 'tileset\\platform',
+            self.tileset.INSTALLATION: 'tileset\\install',
+            self.tileset.ASHWORLD: 'tileset\\ashworld',
+            self.tileset.JUNGLE: 'tileset\\jungle',
+            self.tileset.DESERT: 'tileset\\Desert',
+            self.tileset.ARCTIC: 'tileset\\Ice',
+            self.tileset.TWILIGHT: 'tileset\\Twilight',
+        }[tileset]
+
+    def tiles(self, tileset):
+        if tileset not in self._tiles_cache:
+            cv5_entries = self.process_tileset_file(tileset, CV5Entry)
+            vf4_entries = self.process_tileset_file(tileset, VF4Entry)
+            vx4_entries = self.process_tileset_file(tileset, VX4Entry)
+            vr4_entries = self.process_tileset_file(tileset, VR4Entry)
+            wpe_entries = self.process_tileset_file(tileset, WPEEntry)
+
+            minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
+
+            self._tiles_cache[tileset] = []
+            for group_id, cv5_entry in enumerate(cv5_entries):
+                tile_group = TileGroup(group_id, cv5_entry)
+                for group_offset, megatile in enumerate(cv5_entry.megatiles):
+                    vf4_entry = vf4_entries[megatile]
+                    vx4_entry = vx4_entries[megatile]
+                    tile = Tile(tile_group, group_offset, vf4_entry, vx4_entry, minitile_graphics)
+                    self._tiles_cache[tileset].append(tile)
+
+        return self._tiles_cache[tileset]

@@ -1,4 +1,3 @@
-import mpq
 import enum
 import numpy
 import os
@@ -144,27 +143,7 @@ class Minitile:
             self.graphics_id == other.graphics_id and \
             self.graphics_flipped == other.graphics_flipped
 
-class BaseTileset(enum.Enum):
-    def __init__(self, value):
-        self._tiles_cache = None
-
-    def process(self, mpq_file, entry_type):
-        file = None
-        try:
-            file = mpq_file.open(self.tileset_basename() + '.' + entry_type.EXTENSION)
-
-            entries = []
-            while file.tell() != file.size():
-                data = file.read(entry_type.SIZE)
-                entry = entry_type(data)
-                entries.append(entry)
-
-            return entries
-        finally:
-            if file != None:
-                file.close()
-
-class Tileset(BaseTileset):
+class Tileset(enum.Enum):
     """Implements an enum with all tilesets in the game
 
     It exposes an abstraction for reading cv5/vf4/vx4/vr4/wpe files.
@@ -180,50 +159,3 @@ class Tileset(BaseTileset):
     DESERT = 5
     ARCTIC = 6
     TWILIGHT = 7
-
-    def game_archive(self):
-        data = mpq.MPQFile()
-
-        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'StarDat.mpq'))
-        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'BrooDat.mpq'))
-        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'patch_rt.mpq'))
-        data.add_archive(os.path.join(config.STARCRAFT_ROOT, 'patch_ed.mpq'))
-
-        return data
-
-    def tileset_basename(self):
-        return {
-            self.BADLANDS: 'tileset\\badlands',
-            self.SPACE_PLATFORM: 'tileset\\platform',
-            self.INSTALLATION: 'tileset\\install',
-            self.ASHWORLD: 'tileset\\ashworld',
-            self.JUNGLE: 'tileset\\jungle',
-            self.DESERT: 'tileset\\Desert',
-            self.ARCTIC: 'tileset\\Ice',
-            self.TWILIGHT: 'tileset\\Twilight',
-        }[self]
-
-    @property
-    def tiles(self):
-        if self._tiles_cache == None:
-            mpq_file = self.game_archive()
-            cv5_entries = self.process(mpq_file, CV5Entry)
-            vf4_entries = self.process(mpq_file, VF4Entry)
-            vx4_entries = self.process(mpq_file, VX4Entry)
-            vr4_entries = self.process(mpq_file, VR4Entry)
-            wpe_entries = self.process(mpq_file, WPEEntry)
-
-            minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
-
-            self._tiles_cache = []
-            for group_id, cv5_entry in enumerate(cv5_entries):
-                tile_group = TileGroup(group_id, cv5_entry)
-                for group_offset, megatile in enumerate(cv5_entry.megatiles):
-                    vf4_entry = vf4_entries[megatile]
-                    vx4_entry = vx4_entries[megatile]
-                    tile = Tile(tile_group, group_offset, vf4_entry, vx4_entry, minitile_graphics)
-                    self._tiles_cache.append(tile)
-
-        return self._tiles_cache
-
-__all__ = ['Tileset']
