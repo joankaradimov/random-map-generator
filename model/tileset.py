@@ -121,7 +121,7 @@ class Minitile:
 
     def __init__(self, vf4_entry, vx4_entry, minitile_graphics):
         self.walkable = bool(vf4_entry & 1)
-        self.height = ((vf4_entry >> 1) & 3) / 3
+        self.height = ((vf4_entry >> 1) & 3) / 4
         self.blocks_view = bool(vf4_entry & 8)
         self.ramp = bool(vf4_entry & 16)
         self.graphics_id = vx4_entry >> 1
