@@ -3,6 +3,7 @@ import os
 
 from tileset import *
 import starcraft.scenario
+import starcraft.tileset
 from string_table import *
 import game
 
@@ -72,11 +73,11 @@ class Game(game.Game):
 
     def tiles(self, tileset):
         if tileset not in self._tiles_cache:
-            cv5_entries = self.process_tileset_file(tileset, CV5Entry)
+            cv5_entries = self.process_tileset_file(tileset, starcraft.tileset.CV5Entry)
             vf4_entries = self.process_tileset_file(tileset, VF4Entry)
             vx4_entries = self.process_tileset_file(tileset, VX4Entry)
             vr4_entries = self.process_tileset_file(tileset, VR4Entry)
-            wpe_entries = self.process_tileset_file(tileset, WPEEntry)
+            wpe_entries = self.process_tileset_file(tileset, starcraft.tileset.WPEEntry)
 
             minitile_graphics = [vr4_entry.to_graphics(wpe_entries) for vr4_entry in vr4_entries]
 
