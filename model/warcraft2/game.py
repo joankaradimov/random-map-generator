@@ -1,3 +1,4 @@
+from itertools import product
 import os
 
 import warcraft2.scenario
@@ -35,7 +36,9 @@ class Game(game.Game):
             return []
 
     def scenario_filenames(self):
-        return [] # TODO: implement
+        return \
+            ['Campaign\\' + x % i for x, i in product(['Human\\Human%02d.pud', 'Orc\\Orc%02d.pud'], range(1, 15))] + \
+            ['Campaign\\' + x % i for x, i in product(['XHuman\\2XHum%02d.pud', 'XOrc\\2XOrc%02d.pud'], range(1, 13))]
 
     def scenario_buider(self, filename, chk_file):
         return warcraft2.scenario.ScenarioBuilder(self, filename, chk_file)
