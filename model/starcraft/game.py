@@ -19,7 +19,7 @@ class Game(game.Game):
     def __init__(self, game_directory):
         super().__init__(game_directory)
 
-        self.tileset = Tileset
+        self.tileset = starcraft.tileset.Tileset
         self.player_type = PlayerType
 
     @classmethod
