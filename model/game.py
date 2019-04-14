@@ -12,6 +12,18 @@ class PlayerType(enum.Enum):
         return self == self.HUMAN or self == self.COMPUTER
 
 class Game:
+    @staticmethod
+    def create(game_directory):
+        import armageddon.game
+        import starcraft.game
+        import warcraft2.game
+
+        games_types = [armageddon.game.Game, warcraft2.game.Game, starcraft.game.Game]
+        for game in games_types:
+            data_file_paths = (os.path.join(game_directory, x) for x in game.data_files())
+            if all(os.path.exists(x) for x in data_file_paths):
+                return game(game_directory)
+
     def __init__(self, game_directory):
         self.directory = game_directory
         self.data = mpq.MPQFile()
