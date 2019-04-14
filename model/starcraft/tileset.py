@@ -1,3 +1,5 @@
+import enum
+import numpy
 import struct
 
 class CV5Entry:
