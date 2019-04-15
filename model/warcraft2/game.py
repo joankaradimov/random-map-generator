@@ -17,7 +17,7 @@ class PlayerType(game.PlayerType):
     RESCUE_ACTIVE = 7
     # 0x08 - 0xff are passive computer
 
-class Game(game.Game):
+class Game(game.MpqBasedGame):
     def __init__(self, game_directory):
         super().__init__(game_directory)
 

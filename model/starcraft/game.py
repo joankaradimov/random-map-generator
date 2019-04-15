@@ -15,7 +15,7 @@ class PlayerType(game.PlayerType):
     HUMAN = 6
     NEUTRAL = 7
 
-class Game(game.Game):
+class Game(game.MpqBasedGame):
     def __init__(self, game_directory):
         super().__init__(game_directory)
 

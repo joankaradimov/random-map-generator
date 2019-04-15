@@ -26,8 +26,6 @@ class Game:
 
     def __init__(self, game_directory):
         self.directory = game_directory
-        self.data = mpq.MPQFile()
-
         self._tiles_cache = {}
 
         for data_file in self.data_files():
@@ -35,9 +33,6 @@ class Game:
 
     def close(self):
         self.data.close()
-
-    def load_data_file(self, data_file):
-        self.data.add_archive(os.path.join(self.directory, data_file))
 
     def process_game_scenarios(self):
         scenarios = []
@@ -91,3 +86,11 @@ class Game:
         finally:
             if file != None:
                 file.close()
+
+class MpqBasedGame:
+    def __init__(self, game_directory):
+        super().__init__(game_directory)
+        self.data = mpq.MPQFile()
+
+    def load_data_file(self, data_file):
+        self.data.add_archive(os.path.join(self.directory, data_file))
