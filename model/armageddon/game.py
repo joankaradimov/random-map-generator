@@ -1,16 +1,22 @@
 import os
+import re
 import struct
+
+import game
 
 class HedEntry:
     def __init__(self, offset, length):
         self.offset = offset
         self.length = length
 
-class Game:
-    def __init__(self, game_directory):
-        self.directory = game_directory
-        # TODO: filter by file exension
-        with open(self.data_file('.hed'), 'rb') as hed_file:
+class Game(game.Game):
+    def load_data_file(self, data_file):
+        if hasattr(self, 'data'):
+            # TODO: handle multiple data files
+            raise Exception('Cannot handle multiple MFP files')
+
+        hed_filename = re.sub('.mfp$', '.hed', data_file.lower())
+        with open(os.path.join(self.directory, hed_filename), 'rb') as hed_file:
             hed_data = hed_file.read()
 
         unknown, entry_count = struct.unpack_from('II', hed_data, 0)
@@ -25,26 +31,14 @@ class Game:
 
             self.entries[filename] = HedEntry(file_offset, file_length)
 
-        # TODO: filter by file exension
-        self.data = open(self.data_file('.mfp'), 'rb')
+        self.data = open(os.path.join(self.directory, data_file), 'rb')
 
     def close(self):
         self.data.close()
 
     @classmethod
-    def hed_file(cls):
-        return next(file for file in cls.data_files() if file.lower().endswith('.hed'))
-
-    def data_file(self, extension):
-        filename = next(file for file in self.data_files() if file.lower().endswith(extension))
-        return os.path.join(self.directory, filename)
-
-    @classmethod
     def data_files(cls):
-        return [
-            'Armageddon.HED',
-            'Armageddon.MFP',
-        ]
+        return ['Armageddon.MFP']
 
     def read_file(self, filename):
         entry = self.data.entries[filename]
