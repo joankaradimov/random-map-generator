@@ -87,10 +87,10 @@ class Game:
             if file != None:
                 file.close()
 
-class MpqBasedGame:
+class MpqBasedGame(Game):
     def __init__(self, game_directory):
-        super().__init__(game_directory)
         self.data = mpq.MPQFile()
+        super().__init__(game_directory)
 
     def load_data_file(self, data_file):
         self.data.add_archive(os.path.join(self.directory, data_file))
