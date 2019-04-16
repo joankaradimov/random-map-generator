@@ -10,6 +10,6 @@ https://github.com/fo40225/tensorflow-windows-wheel/blob/master/1.12.0/py36/CPU/
 
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 \
     --install-option=build_ext \
-    --install-option="-U_DLL"
-	--install-option="-IC:/dev/work/StormLib/src/" \
-	--install-option="-LC:/dev/work/StormLib/storm_dll/;C:/dev/work/StormLib/bin/StormLib/x64/ReleaseAS/"
+    --install-option="-U_DLL" \
+    --install-option="-IC:/dev/work/random-map/storm-lib/src" \
+    --install-option="-LC:/dev/work/random-map/storm-lib/storm_dll/;C:/dev/work/random-map/storm-lib/bin/StormLib/x64/ReleaseAS/"
