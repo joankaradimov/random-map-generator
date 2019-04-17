@@ -41,9 +41,9 @@ class Game(game.Game):
         return ['Armageddon.MFP']
 
     def read_file(self, filename):
-        entry = self.data.entries[filename]
-        self.data.seek(entry.offset)
-        return self.data.read(entry.length)
+        entry = self.entries[filename]
+        self.seek(entry.offset)
+        return self.read(entry.length)
 
     def process_game_scenarios(self):
         return []
