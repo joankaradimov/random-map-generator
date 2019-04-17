@@ -46,4 +46,4 @@ class Game(game.Game):
         return self.read(entry.length)
 
     def process_game_scenarios(self):
-        return []
+        return [x for x in self.entries if x.endswith('.amm')]
