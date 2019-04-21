@@ -45,5 +45,5 @@ class Game(game.Game):
         self.seek(entry.offset)
         return self.read(entry.length)
 
-    def process_game_scenarios(self):
+    def scenario_filenames(self):
         return [x for x in self.entries if x.endswith('.amm')]
