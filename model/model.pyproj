@@ -25,6 +25,9 @@
     <Compile Include="armageddon\game.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="armageddon\tileset.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="config.py">
       <SubType>Code</SubType>
     </Compile>
