@@ -27,6 +27,9 @@ class MfpArchive:
     def close(self):
         self.file.close()
 
+    def __contains__(self, filename):
+        return filename in self.entries
+
 class HedEntry:
     def __init__(self, offset, length):
         self.offset = offset
