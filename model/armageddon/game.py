@@ -57,3 +57,12 @@ class Game(game.Game):
 
     def scenario_filenames(self):
         return [x for x in self.data.entries if x.endswith('.amm')]
+
+    def tileset_basename(self, tileset):
+        return {
+            self.tileset.BUILDINGS: 'Data\\buildings',
+            self.tileset.DESERT: 'tileset\\Desert',
+            self.tileset.EAD: 'tileset\\ead',
+            self.tileset.EARTH: 'tileset\\Earth',
+            self.tileset.SPACE: 'tileset\\space',
+        }[tileset]
