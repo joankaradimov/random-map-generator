@@ -36,11 +36,11 @@ class Game:
 
     def process_game_scenarios(self):
         scenarios = []
-        scenarios += self.process_mpq()
+        scenarios += self.process_game_archive()
         scenarios += self.process_scenarios(os.path.join(self.directory, 'Maps'))
         return scenarios
 
-    def process_mpq(self):
+    def process_game_archive(self):
         scenarios = []
 
         for filename in self.scenario_filenames():
