@@ -134,8 +134,4 @@ class Scenario:
     def graphics(self):
         return graphics.tile(self.tiles)
 
-    @staticmethod
-    def builder(game, filename, chk_file):
-        return ScenarioBuilder(game, filename, chk_file)
-
 __all__ = ['ScenarioError', 'ScenarioVersion', 'Scenario']
