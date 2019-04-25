@@ -3,6 +3,7 @@ import re
 import struct
 
 import game
+import armageddon.scenario
 
 class MfpArchive:
     def __init__(self, file_path):
@@ -57,6 +58,9 @@ class Game(game.Game):
 
     def scenario_filenames(self):
         return [x for x in self.data.entries if x.endswith('.amm')]
+
+    def scenario_buider(self, filename, file):
+        return armageddon.scenario.ScenarioBuilder(self, filename, file)
 
     def tileset_basename(self, tileset):
         return {

@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="armageddon\scenario.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="armageddon\game.py">
       <SubType>Code</SubType>
     </Compile>
