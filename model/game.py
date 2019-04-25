@@ -37,7 +37,7 @@ class Game:
     def process_game_scenarios(self):
         scenarios = []
         scenarios += self.process_game_archive()
-        scenarios += self.process_scenarios(os.path.join(self.directory, 'Maps'))
+        scenarios += self.process_directory(os.path.join(self.directory, 'Maps'))
         return scenarios
 
     def process_game_archive(self):
@@ -55,7 +55,7 @@ class Game:
 
         return scenarios
 
-    def process_scenarios(self, directory):
+    def process_directory(self, directory):
         scenarios = []
 
         for dir_name, subdir_list, file_list in os.walk(directory):

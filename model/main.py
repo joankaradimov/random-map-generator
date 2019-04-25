@@ -8,4 +8,4 @@ if __name__ == '__main__':
     game = Game.create(config.STARCRAFT_ROOT)
     scenarios += game.process_game_scenarios()
     for directory in config.MAP_DIRECTORIES:
-        scenarios += game.process_scenarios(directory)
+        scenarios += game.process_directory(directory)
