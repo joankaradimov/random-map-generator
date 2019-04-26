@@ -28,6 +28,11 @@ class MfpArchive:
     def close(self):
         self.file.close()
 
+    def read_file(self, filename):
+        entry = self.entries[filename]
+        self.file.seek(entry.offset)
+        return self.file.read(entry.length)
+
     def __contains__(self, filename):
         return filename in self.entries
 
@@ -50,11 +55,6 @@ class Game(game.Game):
     @classmethod
     def data_files(cls):
         return ['Armageddon.MFP']
-
-    def read_file(self, filename):
-        entry = self.data.entries[filename]
-        self.seek(entry.offset)
-        return self.read(entry.length)
 
     def scenario_filenames(self):
         return [x for x in self.data.entries if x.endswith('.amm')]
