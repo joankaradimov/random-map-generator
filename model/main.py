@@ -9,3 +9,5 @@ if __name__ == '__main__':
     scenarios += game.process_game_scenarios()
     for directory in config.MAP_DIRECTORIES:
         scenarios += game.process_directory(directory)
+
+    print(len(scenarios))
