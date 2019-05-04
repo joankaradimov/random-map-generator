@@ -1,3 +1,5 @@
+import scenario
+
 class ScenarioBuilder:
     def __init__(self, filename, file):
         pass
