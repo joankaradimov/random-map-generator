@@ -6,7 +6,7 @@ numpy==1.16.2
 pandas==0.24.1
 scikit-learn==0.20.3
 seaborn==0.9.0
-https://github.com/fo40225/tensorflow-windows-wheel/blob/master/1.12.0/py36/CPU/avx2/tensorflow-1.12.0-cp36-cp36m-win_amd64.whl?raw=true
+https://github.com/fo40225/tensorflow-windows-wheel/blob/master/1.12.0/py37/CPU/avx2/tensorflow-1.12.0-cp37-cp37m-win_amd64.whl?raw=true
 
 git+https://github.com/jleclanche/python-mpq@f25cbaef760aae01bb9a2bb05a19d698b6528d58 \
     --install-option=build_ext \
