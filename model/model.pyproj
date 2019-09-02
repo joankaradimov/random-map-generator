@@ -71,12 +71,14 @@
     <Compile Include="warcraft2\tileset.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="warcraft\game.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="armageddon\" />
+    <Folder Include="warcraft\" />
     <Folder Include="starcraft\" />
     <Folder Include="warcraft2\" />
   </ItemGroup>

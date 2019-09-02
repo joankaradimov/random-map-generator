@@ -16,9 +16,10 @@ class Game:
     def create(game_directory):
         import armageddon.game
         import starcraft.game
+        import warcraft.game
         import warcraft2.game
 
-        games_types = [armageddon.game.Game, warcraft2.game.Game, starcraft.game.Game]
+        games_types = [armageddon.game.Game, warcraft.game.Game, warcraft2.game.Game, starcraft.game.Game]
         for game in games_types:
             data_file_paths = (os.path.join(game_directory, x) for x in game.data_files())
             if all(os.path.exists(x) for x in data_file_paths):
