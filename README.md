@@ -6,6 +6,15 @@ It serves as the final project for the course "Practical Introduction to Machine
 Learning with Python" in the Faculty of Mathematics and Informatics at Sofia University,
 school year 2018-2019.
 
+## Setup
+
+```bash
+git clone git@github.com:joankaradimov/random-map-generator.git
+cd random-map-generator
+git submodule init
+git submodule update
+```
+
 ## Credits
 
 This is possible thanks of:
