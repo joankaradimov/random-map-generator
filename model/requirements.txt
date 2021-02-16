@@ -5,6 +5,7 @@ matplotlib==3.1.1
 numpy==1.20.1
 pandas==0.25.1
 scikit-learn==0.21.3
+imageio==2.9.0
 seaborn==0.11.1
 https://github.com/fo40225/tensorflow-windows-wheel/blob/master/1.12.0/py37/CPU/avx2/tensorflow-1.12.0-cp37-cp37m-win_amd64.whl?raw=true
 
