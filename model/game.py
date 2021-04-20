@@ -47,14 +47,14 @@ class Game:
         scenarios = []
 
         for filename in self.scenario_filenames():
-            chk_file = None
+            file = None
             try:
                 if filename in self.data:
-                    chk_file = self.data.open(filename)
-                    scenarios += self.process_chk(os.path.basename(filename), chk_file)
+                    file = self.data.open(filename)
+                    scenarios += self.process_chk(os.path.basename(filename), file)
             finally:
-                if chk_file != None:
-                    chk_file.close()
+                if file != None:
+                    file.close()
 
         return scenarios
 
