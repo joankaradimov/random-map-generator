@@ -12,8 +12,7 @@ class PlayerType(enum.Enum):
         return self == self.HUMAN or self == self.COMPUTER
 
 class Game:
-    @staticmethod
-    def create(game_directory):
+    def __new__(cls, game_directory):
         import armageddon.game
         import starcraft.game
         import warcraft.game
@@ -23,7 +22,8 @@ class Game:
         for game in games_types:
             data_file_paths = (os.path.join(game_directory, x) for x in game.data_files())
             if all(os.path.exists(x) for x in data_file_paths):
-                return game(game_directory)
+                instance = super().__new__(game)
+                return instance
 
     def __init__(self, game_directory):
         self.directory = game_directory
