@@ -25,6 +25,8 @@ class Game:
                 instance = super().__new__(game)
                 return instance
 
+        raise Exception('Could not detect game')
+
     def __init__(self, game_directory):
         self.directory = game_directory
         self._tiles_cache = {}
