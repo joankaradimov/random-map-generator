@@ -31,6 +31,9 @@
     <Compile Include="armageddon\tileset.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="armageddon\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="config.py">
       <SubType>Code</SubType>
     </Compile>
@@ -45,6 +48,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="scenario.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="starcraft\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="starcraft\game.py">
@@ -71,7 +77,11 @@
     <Compile Include="warcraft2\tileset.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="warcraft2\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="warcraft\game.py" />
+    <Compile Include="warcraft\__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="requirements.txt" />
